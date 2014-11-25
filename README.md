@@ -1,4 +1,4 @@
-ContinuaInit
+JiraCli
 ============
 
 ![ContinuaInit](design/logo/logo_64.png)
