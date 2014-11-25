@@ -3,7 +3,7 @@ ContinuaInit
 
 ![ContinuaInit](design/logo/logo_64.png)
 
-[intro]
+JiraCli allows control of JIRA via the command line interface (CLI). One feature that is very useful is the availibility to create releases via the CLI. This is very useful for build servers and continuous integration (CI) situations. 
 
 
 ## Usage
