@@ -10,12 +10,17 @@ JiraCli allows control of JIRA via the command line interface (CLI). One feature
 
 The usage is simple:
 
-    JiraCli.exe -user [user] -pw [password] -url [url] [otheroptions]
+    JiraCli.exe -user [user] -pw [password] -url [url] -action [action]
 
-## Create new release in JIRA
+The actions are implemented and determined dynamically. Use the **-help** parameter to see all available actions.
 
-	JiraCli.exe -user [user] -pw [password] -url [url] -createrelease -project MyProject -version 1.2.0 
+## Create new version in JIRA
 
+	[basecall] -createversion -project MyProject -version 1.2.0 
+
+## Release new version in JIRA
+
+	[basecall] -releaseversion -project MyProject -version 1.2.0 
 
 #Icon
 

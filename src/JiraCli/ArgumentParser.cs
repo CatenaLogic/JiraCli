@@ -81,11 +81,23 @@ namespace JiraCli
                     continue;
                 }
 
-                //if (IsSwitch("v", name))
-                //{
-                //    context.Version = value;
-                //    continue;
-                //}
+                if (IsSwitch("action", name))
+                {
+                    context.Action = value;
+                    continue;
+                }
+
+                if (IsSwitch("project", name))
+                {
+                    context.Project = value;
+                    continue;
+                }
+
+                if (IsSwitch("version", name))
+                {
+                    context.Version = value;
+                    continue;
+                }
 
                 //if (IsSwitch("ci", name))
                 //{

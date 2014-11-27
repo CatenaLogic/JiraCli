@@ -36,6 +36,9 @@
     <ApplicationIcon>Resources\Icons\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Atlassian.Jira">
+      <HintPath>..\..\lib\Atlassian.SDK.2.4.0\lib\Atlassian.Jira.dll</HintPath>
+    </Reference>
     <Reference Include="Catel.Core">
       <HintPath>..\..\lib\Catel.Core.4.0.0\lib\net40\Catel.Core.dll</HintPath>
     </Reference>
@@ -60,6 +63,7 @@
     <Reference Include="System.Runtime">
       <HintPath>..\..\lib\Microsoft.Bcl.1.1.9\lib\net40\System.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Threading.Tasks">
       <HintPath>..\..\lib\Microsoft.Bcl.1.1.9\lib\net40\System.Threading.Tasks.dll</HintPath>
     </Reference>
@@ -73,16 +77,28 @@
     <Compile Include="..\SolutionAssemblyInfo.cs">
       <Link>Properties\SolutionAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Actions\ActionBase.cs" />
+    <Compile Include="Actions\CreateVersion\CreateVersionAction.cs" />
+    <Compile Include="Actions\Interfaces\IAction.cs" />
+    <Compile Include="Actions\ReleaseVersion\ReleaseVersionAction.cs" />
     <Compile Include="ArgumentParser.cs" />
+    <Compile Include="Attributes\ActionAttribute.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Exceptions\JiraCliException.cs" />
     <Compile Include="Extensions\IntExtensions.cs" />
+    <Compile Include="Extensions\JiraExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="HelpWriter.cs" />
+    <Compile Include="Help\HelpWriter.cs" />
+    <Compile Include="Help\Interfaces\IHelpWriter.cs" />
+    <Compile Include="JiraAutomation.cs" />
     <Compile Include="Logging\OutputLogListener.cs" />
+    <Compile Include="Managers\ActionManager.cs" />
+    <Compile Include="Managers\Interfaces\IActionManager.cs" />
     <Compile Include="ModuleInitializer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Interfaces\IVersionService.cs" />
+    <Compile Include="Services\VersionService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />

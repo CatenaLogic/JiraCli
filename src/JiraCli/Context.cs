@@ -24,6 +24,11 @@ namespace JiraCli
         public string Password { get; set; }
         public string JiraUrl { get; set; }
 
+        public string Action { get; set; }
+
+        public string Project { get; set; }
+        public string Version { get; set; }
+
         public void ValidateContext()
         {
             if (string.IsNullOrEmpty(UserName))
@@ -41,7 +46,10 @@ namespace JiraCli
                 Log.ErrorAndThrowException<JiraCliException>("Jira url is missing");
             }
 
-            // TODO: Add more items
+            if (string.IsNullOrEmpty(Action))
+            {
+                Log.ErrorAndThrowException<JiraCliException>("Action is missing");
+            }
         }
     }
 }

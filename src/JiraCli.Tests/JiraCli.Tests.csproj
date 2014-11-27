@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Atlassian.Jira">
+      <HintPath>..\..\lib\Atlassian.SDK.2.4.0\lib\Atlassian.Jira.dll</HintPath>
+    </Reference>
     <Reference Include="Catel.Core">
       <HintPath>..\..\lib\Catel.Core.4.0.0\lib\net40\Catel.Core.dll</HintPath>
     </Reference>

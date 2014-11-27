@@ -8,11 +8,9 @@
 namespace JiraCli
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using Catel.IoC;
     using Catel.Logging;
-    using Catel.Reflection;
     using Logging;
 
     internal class Program
@@ -28,52 +26,35 @@ namespace JiraCli
             var consoleLogListener = new OutputLogListener();
             LogManager.AddListener(consoleLogListener);
 
+            var exitCode = 0;
+
             try
             {
-                HelpWriter.WriteAppHeader(s => Log.Write(LogEvent.Info, s));
+                var jiraAutomation = TypeFactory.Default.CreateInstance<JiraAutomation>();
+                var task = jiraAutomation.Run(args, WaitForKeyPress);
+                task.Wait();
 
-                Log.Info("Arguments: {0}", string.Join(" ", args));
-                Log.Info(string.Empty);
-
-                var context = ArgumentParser.ParseArguments(args);
-                if (context.IsHelp)
-                {
-                    HelpWriter.WriteHelp(s => Log.Write(LogEvent.Info, s));
-
-                    WaitForKeyPress();
-
-                    return 0;
-                }
-
-                // TODO: Implement actual logic 
-
-                //var parameters = new List<Parameter>();
-                //var typeFactory = TypeFactory.Default;
-                //var initTypes = TypeCache.GetTypes(x => typeof (RuleBase).IsAssignableFromEx(x) && !x.IsAbstract);
-                //foreach (var initType in initTypes)
-                //{
-                //    var initializer = (RuleBase)typeFactory.CreateInstance(initType);
-                //    parameters.Add(initializer.GetParameter(context));
-                //}
-
-                //foreach (var buildServer in BuildServerList.GetApplicableBuildServers(context))
-                //{
-                //    buildServer.WriteIntegration(parameters, x => Log.Info(x));
-                //}
+                exitCode = task.Result;
+            }
+            catch (JiraCliException)
+            {
+                // Known exception
+                exitCode = -1;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "An unknown exception occurred");
+                exitCode = -1;
+            }
 
 #if DEBUG
-                if (Debugger.IsAttached)
-                {
-                    WaitForKeyPress();
-                }
+            if (Debugger.IsAttached)
+            {
+                WaitForKeyPress();
+            }
 #endif
 
-                return 0;
-            }
-            catch (Exception)
-            {
-                return -1;
-            }
+            return exitCode;
         }
 
         private static void WaitForKeyPress()
