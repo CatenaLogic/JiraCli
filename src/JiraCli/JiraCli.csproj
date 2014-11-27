@@ -78,6 +78,7 @@
       <Link>Properties\SolutionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Actions\ActionBase.cs" />
+    <Compile Include="Actions\CreateAndReleaseVersion\CreateAndReleaseVersionAction.cs" />
     <Compile Include="Actions\CreateVersion\CreateVersionAction.cs" />
     <Compile Include="Actions\Interfaces\IAction.cs" />
     <Compile Include="Actions\ReleaseVersion\ReleaseVersionAction.cs" />

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CreateVersionAction.cs" company="CatenaLogic">
+// <copyright file="CreateAndReleaseVersionAction.cs" company="CatenaLogic">
 //   Copyright (c) 2014 - 2014 CatenaLogic. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -11,15 +11,15 @@ namespace JiraCli
     using Catel.Logging;
     using Services;
 
-    [Action("CreateVersion",
-        Description = "Creates a version for the specified project",
+    [Action("CreateAndReleaseVersion",
+        Description = "Creates and releases a version for the specified project",
         ArgumentsUsage = "-project [projectkey] -version [version]")]
-    public class CreateVersionAction : ActionBase
+    public class CreateAndReleaseVersionAction : ActionBase
     {
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
         private readonly IVersionService _versionService;
 
-        public CreateVersionAction(IVersionService versionService)
+        public CreateAndReleaseVersionAction(IVersionService versionService)
         {
             Argument.IsNotNull(() => versionService);
 
@@ -41,9 +41,13 @@ namespace JiraCli
 
         protected override void ExecuteWithContext(Context context)
         {
-            var jira = CreateJira(context);
+            // Note: we need a different instance of jira because it caches results
 
-            _versionService.CreateVersion(jira, context.Project, context.Version);
+            var createVersionJira = CreateJira(context);
+            _versionService.CreateVersion(createVersionJira, context.Project, context.Version);
+
+            var releaseVersionJira = CreateJira(context);
+            _versionService.ReleaseVersion(releaseVersionJira, context.Project, context.Version);
         }
     }
 }
