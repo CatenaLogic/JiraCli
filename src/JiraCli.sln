@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraCli", "JiraCli\JiraCli.csproj", "{306289C1-A5C5-4C32-BAFE-C1F7E5331291}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9FB2CE5A-0144-4FF3-9B72-DA87AC8550DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{476AAE50-6EAE-4153-ADF5-AED54C60D765}"
+	ProjectSection(SolutionItems) = preProject
+		..\lib\repositories.config = ..\lib\repositories.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{DF61D046-B863-4EE1-8038-21C1FFCFD83A}"
+	ProjectSection(SolutionItems) = preProject
+		JiraCli.sln.DotSettings = JiraCli.sln.DotSettings
+		nuget.config = nuget.config
+		SolutionAssemblyInfo.cs = SolutionAssemblyInfo.cs
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraCli.Tests", "JiraCli.Tests\JiraCli.Tests.csproj", "{D8EAA13F-999E-4D4A-A099-6636B8A8F7CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{306289C1-A5C5-4C32-BAFE-C1F7E5331291}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{306289C1-A5C5-4C32-BAFE-C1F7E5331291}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{306289C1-A5C5-4C32-BAFE-C1F7E5331291}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{306289C1-A5C5-4C32-BAFE-C1F7E5331291}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8EAA13F-999E-4D4A-A099-6636B8A8F7CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8EAA13F-999E-4D4A-A099-6636B8A8F7CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8EAA13F-999E-4D4A-A099-6636B8A8F7CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8EAA13F-999E-4D4A-A099-6636B8A8F7CA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{306289C1-A5C5-4C32-BAFE-C1F7E5331291} = {9FB2CE5A-0144-4FF3-9B72-DA87AC8550DE}
+		{D8EAA13F-999E-4D4A-A099-6636B8A8F7CA} = {9FB2CE5A-0144-4FF3-9B72-DA87AC8550DE}
+	EndGlobalSection
+EndGlobal
