@@ -1,9 +1,9 @@
 JiraCli
 ============
 
-![ContinuaInit](design/logo/logo_64.png)
+![JiraCli](design/logo/logo_64.png)
 
-JiraCli allows control of JIRA via the command line interface (CLI). One feature that is very useful is the availibility to create releases via the CLI. This is very useful for build servers and continuous integration (CI) situations. 
+JiraCli allows control of JIRA via the command line interface (CLI). One feature that is very useful is the availability to create releases via the CLI. This is very useful for build servers and continuous integration (CI) situations. 
 
 
 ## Usage
@@ -47,7 +47,7 @@ The releases will be available as separate executable download on the [releases 
 
 If you want to install the tool on your (build) computer, the package is available via <a href="https://chocolatey.org/" target="_blank">Chocolatey</a>. To install, use the following command:
 
-    choco install JiraCli
+    choco install jiracli
 
 ## Get it via NuGet ##
 
