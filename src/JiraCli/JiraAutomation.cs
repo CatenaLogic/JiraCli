@@ -58,9 +58,8 @@ namespace JiraCli
 
             Log.Info("Running action '{0}'", action.Name);
 
-            await action.Execute(context);
-
-            return 0;
+            var result = await action.Execute(context);
+            return result ? 0 : -1;
         }
     }
 }
