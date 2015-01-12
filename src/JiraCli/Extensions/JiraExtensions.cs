@@ -31,11 +31,11 @@ namespace JiraCli
             return (string) field.GetValue(jira);
         }
 
-        public static IJiraSoapServiceClient GetJiraSoapService(this Jira jira)
+        public static IJiraRemoteService GetJiraService(this Jira jira)
         {
             Argument.IsNotNull("jira", jira);
 
-            return PropertyHelper.GetPropertyValue<IJiraSoapServiceClient>(jira, "RemoteSoapService");
+            return PropertyHelper.GetPropertyValue<IJiraRemoteService>(jira, "RemoteService");
         }
     }
 }

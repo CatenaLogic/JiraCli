@@ -47,7 +47,7 @@ namespace JiraCli.Services
             Log.Debug("Version does not yet exist, creating version");
 
             var token = jira.GetToken();
-            var jiraService = jira. GetJiraSoapService();
+            var jiraService = jira.GetJiraService();
 
             var nextSequence = 0L;
             var remoteVersions = jiraService.GetVersions(token, project).OrderBy(x => x.name);
@@ -94,7 +94,7 @@ namespace JiraCli.Services
             }
 
             var token = jira.GetToken();
-            var jiraService = jira.GetJiraSoapService();
+            var jiraService = jira.GetJiraService();
 
             var remoteVersion = GetVersion(jiraService, token, project, version);
 
@@ -115,7 +115,7 @@ namespace JiraCli.Services
             return existingVersion;
         }
 
-        private RemoteVersion GetVersion(IJiraSoapServiceClient jiraService, string token, string project, string version)
+        private RemoteVersion GetVersion(IJiraRemoteService jiraService, string token, string project, string version)
         {
             var existingVersion = (from x in jiraService.GetVersions(token, project)
                                    where string.Equals(x.name, version, StringComparison.OrdinalIgnoreCase)
