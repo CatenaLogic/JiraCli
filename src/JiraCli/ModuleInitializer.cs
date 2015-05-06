@@ -17,6 +17,8 @@ public static class ModuleInitializer
 
         serviceLocator.RegisterType<IActionManager, ActionManager>();
         serviceLocator.RegisterType<IHelpWriter, HelpWriter>();
+        serviceLocator.RegisterType<IVersionInfoService, VersionInfoService>();
+        serviceLocator.RegisterType<IMergeVersionService, MergeVersionService>();
         serviceLocator.RegisterType<IVersionService, VersionService>();
     }
 }
