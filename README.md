@@ -1,6 +1,8 @@
 JiraCli
 ============
 
+[![Join the chat at https://gitter.im/CatenaLogic/JiraCli](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/CatenaLogic/JiraCli?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ![JiraCli](design/logo/logo_64.png)
 
 JiraCli allows control of JIRA via the command line interface (CLI). One feature that is very useful is the availability to create releases via the CLI. This is very useful for build servers and continuous integration (CI) situations. 
