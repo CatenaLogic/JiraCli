@@ -41,6 +41,15 @@ namespace JiraCli
             var responseJson = jiraRestClient.ExecuteRequestRaw(Method.PUT, resource, requestJson);
         }
 
+        public static void DeleteProjectVersion(this IJiraRestClient jiraRestClient, JiraProjectVersion projectVersion)
+        {
+            Argument.IsNotNull(() => jiraRestClient);
+            Argument.IsNotNull(() => projectVersion);
+
+            var resource = string.Format("rest/api/2/version/{0}", projectVersion.Id);
+            var responseJson = jiraRestClient.ExecuteRequest(Method.DELETE, resource);
+        }
+
         public static List<JiraProjectVersion> GetProjectVersions(this IJiraRestClient jiraRestClient, string projectKey)
         {
             Argument.IsNotNull(() => jiraRestClient);
