@@ -8,10 +8,14 @@
 namespace JiraCli
 {
     using System;
+    using System.Diagnostics;
+    using System.Linq;
     using System.Threading.Tasks;
     using Atlassian.Jira;
+    using Atlassian.Jira.Remote;
     using Catel;
     using Catel.Logging;
+    using Catel.Reflection;
 
     public abstract class ActionBase : IAction
     {
@@ -50,11 +54,25 @@ namespace JiraCli
 
         protected abstract void ExecuteWithContext(Context context);
 
-        protected Jira CreateJira(Context context)
+        protected IJiraRestClient CreateJira(Context context)
         {
             Argument.IsNotNull(() => context);
 
-            return new Jira(context.JiraUrl, context.UserName, context.Password);
+            var type = TypeCache.GetType("Atlassian.Jira.Remote.JiraRestServiceClient");
+            var constructor = type.GetConstructorsEx().First();
+
+            var jiraRestClient = (IJiraRestClient) constructor.Invoke(new object[]
+            {
+                context.JiraUrl,
+                context.UserName,
+                context.Password,
+                new JiraRestClientSettings
+                {
+                    EnableRequestTrace = Debugger.IsAttached
+                } 
+            });
+
+            return jiraRestClient;
         }
     }
 }

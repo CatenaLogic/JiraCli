@@ -14,13 +14,15 @@ namespace JiraCli.Services
     using Atlassian.Jira.Remote;
     using Catel;
     using Catel.Logging;
-    using Catel.Services;
+    using Models;
+    using RestSharp;
 
     public class VersionService : IVersionService
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         private readonly IMergeVersionService _mergeVersionService;
         private readonly IVersionInfoService _versionInfoService;
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VersionService" /> class.
@@ -36,22 +38,22 @@ namespace JiraCli.Services
             _versionInfoService = versionInfoService;
         }
 
-        public void CreateVersion(Jira jira, string project, string version)
+        public void CreateVersion(IJiraRestClient jiraRestClient, string projectKey, string version)
         {
-            Argument.IsNotNull(() => jira);
-            Argument.IsNotNullOrWhitespace(() => project);
+            Argument.IsNotNull(() => jiraRestClient);
+            Argument.IsNotNullOrWhitespace(() => projectKey);
             Argument.IsNotNullOrWhitespace(() => version);
 
             Log.Info("Creating version '{0}'", version);
 
             Log.Debug("Checking if version already exists");
 
-            var existingVersion = GetProjectVersion(jira, project, version);
+            var existingVersion = GetProjectVersion(jiraRestClient, projectKey, version);
             if (existingVersion != null)
             {
                 Log.Info("Version '{0}' already exists", version);
 
-                if (existingVersion.IsReleased)
+                if (existingVersion.Released)
                 {
                     var error = string.Format("Version '{0}' is already released, are you re-releasing an existing version?", version);
                     Log.Error(error);
@@ -63,158 +65,145 @@ namespace JiraCli.Services
 
             Log.Debug("Version does not yet exist, creating version");
 
-            var token = jira.GetToken();
-            var jiraService = jira.GetJiraService();
-
-            var nextSequence = 0L;
-            var remoteVersions = jiraService.GetVersions(token, project).OrderBy(x => x.name);
-            foreach (var remoteVersion in remoteVersions)
+            var project = GetProject(jiraRestClient, projectKey);
+            if (project == null)
             {
-                Log.Debug("  {0} => {1}", remoteVersion.name, ObjectToStringHelper.ToString(remoteVersion.sequence));
-
-                if (string.Compare(remoteVersion.name, version, StringComparison.OrdinalIgnoreCase) > 0 && (nextSequence == 0L))
-                {
-                    nextSequence = remoteVersion.sequence.Value;
-                }
+                var error = string.Format("Project '{0}' cannot be found or current user does not have access to the project", projectKey);
+                Log.Error(error);
+                throw new InvalidOperationException(error);
             }
 
-            jiraService.AddVersion(token, project, new RemoteVersion
+            jiraRestClient.CreateProjectVersion(new JiraProjectVersion
             {
-                name = version,
-                archived = false,
-                sequence = nextSequence
+                Project = project.Key,
+                Name = version,
             });
 
             Log.Info("Created version '{0}'", version);
         }
 
-        public void ReleaseVersion(Jira jira, string project, string version)
+        public void ReleaseVersion(IJiraRestClient jiraRestClient, string project, string version)
         {
-            Argument.IsNotNull(() => jira);
+            Argument.IsNotNull(() => jiraRestClient);
             Argument.IsNotNullOrWhitespace(() => project);
             Argument.IsNotNullOrWhitespace(() => version);
 
             Log.Info("Releasing version '{0}'", version);
 
-            var existingVersion = GetProjectVersion(jira, project, version);
-            if (existingVersion == null)
+            var projectVersion = GetProjectVersion(jiraRestClient, project, version);
+            if (projectVersion == null)
             {
                 var error = string.Format("Version {0} does not exist, make sure to create it first", version);
                 Log.Error(error);
                 throw new InvalidOperationException(error);
             }
 
-            if (existingVersion.IsReleased)
+            if (projectVersion.Released)
             {
-                Log.Info("Version was already released on {0}", existingVersion.ReleasedDate);
+                Log.Info("Version was already released on {0}", projectVersion.ReleaseDate);
                 return;
             }
 
-            var token = jira.GetToken();
-            var jiraService = jira.GetJiraService();
+            projectVersion.ReleaseDate = DateTime.Now;
+            projectVersion.Released = true;
 
-            var remoteVersion = GetVersion(jiraService, token, project, version);
-
-            remoteVersion.releaseDate = DateTime.Now;
-            remoteVersion.released = true;
-
-            jiraService.ReleaseVersion(token, project, remoteVersion);
+            jiraRestClient.UpdateProjectVersion(projectVersion);
 
             Log.Info("Released version '{0}'", version);
         }
 
-        public void MergeVersions(Jira jira, string project, string version)
+        public void MergeVersions(IJiraRestClient jiraRestClient, string project, string version)
         {
-            Argument.IsNotNull(() => jira);
-            Argument.IsNotNullOrWhitespace(() => project);
-            Argument.IsNotNullOrWhitespace(() => version);
+            //Argument.IsNotNull(() => jira);
+            //Argument.IsNotNullOrWhitespace(() => project);
+            //Argument.IsNotNullOrWhitespace(() => version);
 
-            Log.Info("Merging all prerelease versions into '{0}'", version);
+            //Log.Info("Merging all prerelease versions into '{0}'", version);
 
-            if (!_versionInfoService.IsStableVersion(version))
-            {
-                Log.Info("Version '{0}' is not a stable version, versions will not be merged", version);
-                return;
-            }
+            //if (!_versionInfoService.IsStableVersion(version))
+            //{
+            //    Log.Info("Version '{0}' is not a stable version, versions will not be merged", version);
+            //    return;
+            //}
 
-            var token = jira.GetToken();
-            var jiraService = jira.GetJiraService();
+            //var token = jira.GetToken();
+            //var jiraService = jira.GetJiraService();
 
-            var allVersions = jiraService.GetVersions(token, project);
+            //var allVersions = jiraService.GetVersions(token, project);
 
-            var newRemoteVersion = allVersions.First(x => string.Equals(x.name, version));
-            var versionsToMerge = new List<RemoteVersion>();
+            //var newRemoteVersion = allVersions.First(x => string.Equals(x.name, version));
+            //var versionsToMerge = new List<RemoteVersion>();
 
-            foreach (var remoteVersion in allVersions)
-            {
-                if (_mergeVersionService.ShouldBeMerged(version, remoteVersion.name))
-                {
-                    versionsToMerge.Add(remoteVersion);
-                }
-            }
+            //foreach (var remoteVersion in allVersions)
+            //{
+            //    if (_mergeVersionService.ShouldBeMerged(version, remoteVersion.name))
+            //    {
+            //        versionsToMerge.Add(remoteVersion);
+            //    }
+            //}
 
-            foreach (var versionToMerge in versionsToMerge)
-            {
-                UpdateVersionByNewVersion(jira, project, newRemoteVersion, versionToMerge);
+            //foreach (var versionToMerge in versionsToMerge)
+            //{
+            //    UpdateVersionByNewVersion(jira, project, newRemoteVersion, versionToMerge);
 
-                // TODO: remove version somehow
-                //jiraService.
-            }
+            //    // TODO: remove version somehow
+            //    //jiraService.
+            //}
 
-            Log.Info("Merged all prerelease versions into '{0}'", version);
+            //Log.Info("Merged all prerelease versions into '{0}'", version);
         }
 
-        private void UpdateVersionByNewVersion(Jira jira, string project, RemoteVersion newRemoteVersion, RemoteVersion versionToMerge)
+        private void UpdateVersionByNewVersion(IJiraRestClient jiraRestClient, string project, RemoteVersion newRemoteVersion, RemoteVersion versionToMerge)
         {
-            var token = jira.GetToken();
-            var jiraService = jira.GetJiraService();
+            //var token = jira.GetToken();
+            //var jiraService = jira.GetJiraService();
 
-            // Affects version
-            var affectsVersionJql = string.Format("affectsVersions = \"{0}\"", versionToMerge);
-            var affectsVersionIssues = jiraService.GetIssuesFromJqlSearch(token, affectsVersionJql, 500);
-            foreach (var issue in affectsVersionIssues)
-            {
-                Log.Info("Updating issue '{0}' affected version to be version '{1}'", issue.key, newRemoteVersion.name);
+            //// Affects version
+            //var affectsVersionJql = string.Format("affectsVersions = \"{0}\"", versionToMerge);
+            //var affectsVersionIssues = jiraService.GetIssuesFromJqlSearch(token, affectsVersionJql, 500);
+            //foreach (var issue in affectsVersionIssues)
+            //{
+            //    Log.Info("Updating issue '{0}' affected version to be version '{1}'", issue.key, newRemoteVersion.name);
 
-                var remoteFieldValue = new RemoteFieldValue
-                {
-                    id = "affectsVersions",
-                    values = new[] { newRemoteVersion.id }
-                };
+            //    var remoteFieldValue = new RemoteFieldValue
+            //    {
+            //        id = "affectsVersions",
+            //        values = new[] { newRemoteVersion.id }
+            //    };
 
-                jiraService.UpdateIssue(token, issue.key, new[] { remoteFieldValue });
-            }
+            //    jiraService.UpdateIssue(token, issue.key, new[] { remoteFieldValue });
+            //}
 
-            // Fix version
-            var fixVersionJql = string.Format("fixVersion = \"{0}\"", versionToMerge);
-            var fixVersionIssues = jiraService.GetIssuesFromJqlSearch(token, fixVersionJql, 500);
-            foreach (var issue in fixVersionIssues)
-            {
-                Log.Info("Updating issue '{0}' fix version to be version '{1}'", issue.key, newRemoteVersion.name);
+            //// Fix version
+            //var fixVersionJql = string.Format("fixVersion = \"{0}\"", versionToMerge);
+            //var fixVersionIssues = jiraService.GetIssuesFromJqlSearch(token, fixVersionJql, 500);
+            //foreach (var issue in fixVersionIssues)
+            //{
+            //    Log.Info("Updating issue '{0}' fix version to be version '{1}'", issue.key, newRemoteVersion.name);
 
-                var remoteFieldValue = new RemoteFieldValue
-                {
-                    id = "fixVersions",
-                    values = new[] { newRemoteVersion.id }
-                };
+            //    var remoteFieldValue = new RemoteFieldValue
+            //    {
+            //        id = "fixVersions",
+            //        values = new[] { newRemoteVersion.id }
+            //    };
 
-                jiraService.UpdateIssue(token, issue.key, new[] { remoteFieldValue });
-            }
+            //    jiraService.UpdateIssue(token, issue.key, new[] { remoteFieldValue });
+            //}
         }
 
-        private ProjectVersion GetProjectVersion(Jira jira, string project, string version)
+        private JiraProject GetProject(IJiraRestClient jiraRestClient, string project)
         {
-            var existingVersion = (from x in jira.GetProjectVersions(project)
-                                   where string.Equals(x.Name, version, StringComparison.OrdinalIgnoreCase)
+            var existingPRoject = (from x in jiraRestClient.GetProjects()
+                                   where string.Equals(x.Key, project, StringComparison.OrdinalIgnoreCase)
                                    select x).FirstOrDefault();
 
-            return existingVersion;
+            return existingPRoject;
         }
 
-        private RemoteVersion GetVersion(IJiraRemoteService jiraService, string token, string project, string version)
+        private JiraProjectVersion GetProjectVersion(IJiraRestClient jiraRestClient, string project, string version)
         {
-            var existingVersion = (from x in jiraService.GetVersions(token, project)
-                                   where string.Equals(x.name, version, StringComparison.OrdinalIgnoreCase)
+            var existingVersion = (from x in jiraRestClient.GetProjectVersions(project)
+                                   where string.Equals(x.Name, version, StringComparison.OrdinalIgnoreCase)
                                    select x).FirstOrDefault();
 
             return existingVersion;

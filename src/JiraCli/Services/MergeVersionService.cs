@@ -13,8 +13,9 @@ namespace JiraCli.Services
 
     public class MergeVersionService : IMergeVersionService
     {
-        private readonly IVersionInfoService _versionInfoService;
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
+        private readonly IVersionInfoService _versionInfoService;
 
         public MergeVersionService(IVersionInfoService versionInfoService)
         {
