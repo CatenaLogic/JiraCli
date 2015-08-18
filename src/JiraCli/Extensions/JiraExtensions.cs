@@ -7,35 +7,38 @@
 
 namespace JiraCli
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using Atlassian.Jira;
     using Atlassian.Jira.Remote;
     using Catel;
-    using Catel.Reflection;
+    using Newtonsoft.Json;
+    using RestSharp;
 
     public static class JiraExtensions
     {
-        public static string Authenticate(this JiraSoapServiceClient client, Context context)
+        private static readonly ConstructorInfo _projectVersionConstructorInfo = typeof (ProjectVersion).GetConstructors(BindingFlags.Instance| BindingFlags.NonPublic | BindingFlags.Public).First();
+
+        public static List<ProjectVersion> GetProjectVersions(this IJiraRestClient jiraRestClient, string projectId)
         {
-            Argument.IsNotNull(() => client);
-            Argument.IsNotNull(() => context);
+            Argument.IsNotNull(() => jiraRestClient);
+            Argument.IsNotNullOrWhitespace(() => projectId);
 
-            return client.login(context.UserName, context.Password);
-        }
+            var projectVersions = new List<ProjectVersion>();
 
-        public static string GetToken(this Jira jira)
-        {
-            Argument.IsNotNull("jira", jira);
+            var resource = string.Format("rest/api/2/project/{0}/versions", projectId);
+            var json = jiraRestClient.ExecuteRequest(Method.GET, resource);
 
-            var field = jira.GetType().GetField("_token", BindingFlags.Instance | BindingFlags.NonPublic);
-            return (string) field.GetValue(jira);
-        }
+            foreach (var jsonElement in json.Children())
+            {
+                var remoteVersion = JsonConvert.DeserializeObject<RemoteVersion>(jsonElement.ToString());
 
-        public static IJiraRemoteService GetJiraService(this Jira jira)
-        {
-            Argument.IsNotNull("jira", jira);
+                var projectVersion = (ProjectVersion)_projectVersionConstructorInfo.Invoke(new object[] { remoteVersion });
+                projectVersions.Add(projectVersion);
+            }
 
-            return PropertyHelper.GetPropertyValue<IJiraRemoteService>(jira, "RemoteService");
-        }
+            return projectVersions;
+        } 
     }
 }
