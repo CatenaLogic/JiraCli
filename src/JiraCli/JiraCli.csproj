@@ -107,6 +107,7 @@
     <Compile Include="Context.cs" />
     <Compile Include="Exceptions\JiraCliException.cs" />
     <Compile Include="Extensions\IntExtensions.cs" />
+    <Compile Include="Extensions\JiraExtensions.issue.cs" />
     <Compile Include="Extensions\JiraExtensions.project.cs" />
     <Compile Include="Extensions\JiraExtensions.version.cs" />
     <Compile Include="Extensions\JiraExtensions.cs" />
@@ -117,9 +118,11 @@
     <Compile Include="Logging\OutputLogListener.cs" />
     <Compile Include="Managers\ActionManager.cs" />
     <Compile Include="Managers\Interfaces\IActionManager.cs" />
+    <Compile Include="Models\JiraIssue.cs" />
     <Compile Include="Models\JiraObjectBase.cs" />
     <Compile Include="Models\JiraProject.cs" />
     <Compile Include="Models\JiraProjectVersion.cs" />
+    <Compile Include="Models\JiraSearchRequest.cs" />
     <Compile Include="ModuleInitializer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

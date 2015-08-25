@@ -12,6 +12,7 @@ namespace JiraCli.Services
     public interface IVersionService
     {
         void CreateVersion(IJiraRestClient jiraRestClient, string projectKey, string version);
-        void ReleaseVersion(IJiraRestClient jiraRestClient, string project, string version);
+        void ReleaseVersion(IJiraRestClient jiraRestClient, string projectKey, string version);
+        void MergeVersions(IJiraRestClient jiraRestClient, string projectKey, string version);
     }
 }

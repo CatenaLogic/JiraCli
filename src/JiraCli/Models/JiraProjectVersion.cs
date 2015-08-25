@@ -26,5 +26,10 @@ namespace JiraCli.Models
         public string Project { get; set; }
 
         public int? ProjectId { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

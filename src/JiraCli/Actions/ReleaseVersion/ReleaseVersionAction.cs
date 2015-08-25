@@ -44,6 +44,12 @@ namespace JiraCli
             var jira = CreateJira(context);
 
             _versionService.ReleaseVersion(jira, context.Project, context.Version);
+
+            if (context.MergeVersions)
+            {
+                var mergeVersionsJira = CreateJira(context);
+                _versionService.MergeVersions(mergeVersionsJira, context.Project, context.Version);
+            }
         }
     }
 }
