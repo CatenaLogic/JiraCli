@@ -10,6 +10,7 @@ namespace JiraCli.Services
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using Atlassian.Jira;
     using Atlassian.Jira.Remote;
     using Catel;
@@ -36,6 +37,38 @@ namespace JiraCli.Services
 
             _mergeVersionService = mergeVersionService;
             _versionInfoService = versionInfoService;
+        }
+
+        public void AssignVersionToIssues(IJiraRestClient jiraRestClient, string projectKey, string version, string[] issues)
+        {
+            Argument.IsNotNull(() => jiraRestClient);
+            Argument.IsNotNullOrWhitespace(() => projectKey);
+            Argument.IsNotNullOrWhitespace(() => version);
+            Argument.IsNotNullOrEmptyArray(() => issues);
+
+            Log.Debug("Checking if version already exists");
+
+            var existingVersion = GetProjectVersion(jiraRestClient, projectKey, version);
+            if (existingVersion == null)
+            {
+                var error = string.Format("Version '{0}' does not exist/ Ensure you have created this version first.", version);
+                Log.Error(error);
+                throw new InvalidOperationException(error);
+            }
+
+            Log.Info("Version '{0}' exists", version);
+
+            // update issues
+            var issueUpdate = new JiraIssueUpdate();
+            issueUpdate.AddFieldValue("fixVersions", new { name = version });
+            foreach (var issue in issues)
+            {
+                Log.Info("Updating issue '{0}'", issue);
+                jiraRestClient.UpdateIssue(issue, issueUpdate);
+
+                Log.Info("Issue updated.");
+            }
+
         }
 
         public void CreateVersion(IJiraRestClient jiraRestClient, string projectKey, string version)

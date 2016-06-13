@@ -107,6 +107,12 @@ namespace JiraCli
                     continue;
                 }
 
+                if (IsSwitch("issues", name))
+                {
+                    context.Issues = value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    continue;
+                }
+
                 //if (IsSwitch("ci", name))
                 //{
                 //    bool isCi;

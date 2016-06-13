@@ -29,6 +29,8 @@ namespace JiraCli
         public string Project { get; set; }
         public string Version { get; set; }
 
+        public string[] Issues { get; set; }
+
         public bool MergeVersions { get; set; }
 
         public void ValidateContext()
