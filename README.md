@@ -38,11 +38,11 @@ When you need to log the information to a file, use the following command line:
 
 ## Create new version in JIRA
 
-	[basecall] -createversion -project MyProject -version 1.2.0 
+	[basecall] createversion -project MyProject -version 1.2.0 
 
 ## Release new version in JIRA
 
-	[basecall] -releaseversion -project MyProject -version 1.2.0 
+	[basecall] releaseversion -project MyProject -version 1.2.0 
 
 # How to get JiraCli #
 
