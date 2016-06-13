@@ -1,41 +1,54 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="JiraExtensions.cs" company="CatenaLogic">
-//   Copyright (c) 2014 - 2014 CatenaLogic. All rights reserved.
+//   Copyright (c) 2014 - 2015 CatenaLogic. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 
 namespace JiraCli
 {
-    using System.Reflection;
+    using System.Net;
     using Atlassian.Jira;
-    using Atlassian.Jira.Remote;
     using Catel;
-    using Catel.Reflection;
+    using Models;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+    using Newtonsoft.Json.Serialization;
+    using RestSharp;
 
-    public static class JiraExtensions
+    public static partial class JiraExtensions
     {
-        public static string Authenticate(this JiraSoapServiceClient client, Context context)
+        private static JsonSerializerSettings GetJsonSettings()
         {
-            Argument.IsNotNull(() => client);
-            Argument.IsNotNull(() => context);
-
-            return client.login(context.UserName, context.Password);
+            return new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                NullValueHandling = NullValueHandling.Ignore,
+                DateFormatString = "yyyy-MM-dd"
+            };
         }
 
-        public static string GetToken(this Jira jira)
+        public static JToken ExecuteRequestRaw(this IJiraRestClient jiraRestClient, Method method, string resource, string jsonRequestBody)
         {
-            Argument.IsNotNull("jira", jira);
+            Argument.IsNotNull(() => jiraRestClient);
+            Argument.IsNotNullOrWhitespace(() => jsonRequestBody);
 
-            var field = jira.GetType().GetField("_token", BindingFlags.Instance | BindingFlags.NonPublic);
-            return (string) field.GetValue(jira);
-        }
+            var restRequest = new RestRequest
+            {
+                Resource = resource,
+                Method = method,
+                RequestFormat = DataFormat.Json,
+            };
 
-        public static IJiraSoapServiceClient GetJiraSoapService(this Jira jira)
-        {
-            Argument.IsNotNull("jira", jira);
+            restRequest.AddParameter(new Parameter
+            {
+                Name = "application/json",
+                Type = ParameterType.RequestBody,
+                Value = jsonRequestBody
+            });
 
-            return PropertyHelper.GetPropertyValue<IJiraSoapServiceClient>(jira, "RemoteSoapService");
+            var response = jiraRestClient.ExecuteRequest(restRequest);
+            return response.StatusCode != HttpStatusCode.NoContent ? JToken.Parse(response.Content) : new JObject();
         }
     }
 }

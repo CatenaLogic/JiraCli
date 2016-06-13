@@ -16,7 +16,8 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
-    <NuGetPackageImportStamp>2a64b849</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,14 +37,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Atlassian.Jira">
-      <HintPath>..\..\lib\Atlassian.SDK.2.4.0\lib\Atlassian.Jira.dll</HintPath>
+    <Reference Include="Catel.Core, Version=4.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Catel.Core.4.2.0-unstable0284\lib\net40\Catel.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Catel.Core">
-      <HintPath>..\..\lib\Catel.Core.4.0.0\lib\net40\Catel.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Catel.Fody.Attributes">
-      <HintPath>..\..\lib\Catel.Fody.2.3.0\lib\portable-net4+sl4+wp7+win8+wpa81+MonoAndroid14+MonoTouch40\Catel.Fody.Attributes.dll</HintPath>
+    <Reference Include="Catel.Fody.Attributes, Version=2.8.0.0, Culture=neutral, PublicKeyToken=1c8163524cbe02e6, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Catel.Fody.2.8.0\lib\portable-net4+sl4+wp7+win8+wpa81+MonoAndroid14+MonoTouch40\Catel.Fody.Attributes.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>..\..\lib\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
@@ -54,22 +56,31 @@
     <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
       <HintPath>..\..\lib\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\..\lib\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\..\lib\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.IO">
-      <HintPath>..\..\lib\Microsoft.Bcl.1.1.9\lib\net40\System.IO.dll</HintPath>
+      <HintPath>..\..\lib\Microsoft.Bcl.1.1.10\lib\net40\System.IO.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Net" />
     <Reference Include="System.Runtime">
-      <HintPath>..\..\lib\Microsoft.Bcl.1.1.9\lib\net40\System.Runtime.dll</HintPath>
+      <HintPath>..\..\lib\Microsoft.Bcl.1.1.10\lib\net40\System.Runtime.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Threading.Tasks">
-      <HintPath>..\..\lib\Microsoft.Bcl.1.1.9\lib\net40\System.Threading.Tasks.dll</HintPath>
+      <HintPath>..\..\lib\Microsoft.Bcl.1.1.10\lib\net40\System.Threading.Tasks.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <Choose>
@@ -87,8 +98,12 @@
     <Compile Include="ArgumentParserFacts.cs" />
     <Compile Include="ContextFacts.cs" />
     <Compile Include="Helpers\TestHelper.cs" />
+    <Compile Include="IntegrationTests\IntegrationTests.cs" />
+    <Compile Include="IntegrationTests\IntegrationTests.secureinfo.cs" />
     <Compile Include="ModuleInitializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\MergeVersionServiceFacts.cs" />
+    <Compile Include="Services\VersionInfoServiceFacts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -129,9 +144,9 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\lib\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\lib\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-    <Error Condition="!Exists('..\..\lib\Fody.1.26.2\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\lib\Fody.1.26.2\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\..\lib\Fody.1.29.2\build\portable-net+sl+win+wpa+wp\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\lib\Fody.1.29.2\build\portable-net+sl+win+wpa+wp\Fody.targets'))" />
   </Target>
-  <Import Project="..\..\lib\Fody.1.26.2\build\Fody.targets" Condition="Exists('..\..\lib\Fody.1.26.2\build\Fody.targets')" />
+  <Import Project="..\..\lib\Fody.1.29.2\build\portable-net+sl+win+wpa+wp\Fody.targets" Condition="Exists('..\..\lib\Fody.1.29.2\build\portable-net+sl+win+wpa+wp\Fody.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

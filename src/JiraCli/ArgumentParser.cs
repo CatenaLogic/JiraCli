@@ -99,6 +99,14 @@ namespace JiraCli
                     continue;
                 }
 
+                if (IsSwitch("merge", name))
+                {
+                    bool mergeVersions;
+                    bool.TryParse(value, out mergeVersions);
+                    context.MergeVersions = mergeVersions;
+                    continue;
+                }
+
                 //if (IsSwitch("ci", name))
                 //{
                 //    bool isCi;
