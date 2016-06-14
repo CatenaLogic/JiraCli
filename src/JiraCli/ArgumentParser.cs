@@ -21,7 +21,7 @@ namespace JiraCli
         public static Context ParseArguments(string commandLineArguments)
         {
             var args = SplitCommandLine(commandLineArguments).ToArray();
-            return ParseArguments(args); // ParseArguments(commandLineArguments.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList());
+            return ParseArguments(args);
         }
 
         public static Context ParseArguments(params string[] commandLineArguments)
@@ -165,16 +165,6 @@ namespace JiraCli
                    IsSwitch("help", singleArgument) ||
                    IsSwitch("?", singleArgument);
         }
-
-        //public static IEnumerable<string> SplitCSV(string input)
-        //{
-        //    Regex csvSplit = new Regex("(?:^|,)(\"(?:[^\"]+|\"\")*\"|[^,]*)", RegexOptions.Compiled);
-
-        //    foreach (Match match in csvSplit.Matches(input))
-        //    {
-        //        yield return match.Value.TrimStart(',').Trim();
-        //    }
-        //}
 
         /// <summary>
         /// Shamelessly taken from stackoverflow: http://stackoverflow.com/questions/298830/split-string-containing-command-line-parameters-into-string-in-c-sharp/298990#298990

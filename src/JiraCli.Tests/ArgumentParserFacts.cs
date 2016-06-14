@@ -10,7 +10,6 @@ namespace JiraCli.Test
     using Catel.Test;
     using JiraCli;
     using NUnit.Framework;
-    using Services;
 
     [TestFixture]
     public class ArgumentParserFacts
