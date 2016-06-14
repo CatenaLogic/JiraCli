@@ -175,40 +175,40 @@ namespace JiraCli
         {
             bool inQuotes = false;
 
-            return commandLine.Split(c =>
+            return Split(commandLine, c =>
             {
                 if (c == '\"')
                     inQuotes = !inQuotes;
 
                 return !inQuotes && c == ' ';
             })
-                              .Select(arg => arg.Trim().TrimMatchingQuotes('\"'))
-                              .Where(arg => !string.IsNullOrEmpty(arg));
+            .Select(arg => TrimMatchingQuotes(arg.Trim(), '\"'))
+            .Where(arg => !string.IsNullOrEmpty(arg));
         }
 
-        public static IEnumerable<string> Split(this string str, Func<char, bool> controller)
+        private static IEnumerable<string> Split(string inputString, Predicate<char> shouldSplit)
         {
             int nextPiece = 0;
 
-            for (int c = 0; c < str.Length; c++)
+            for (int c = 0; c < inputString.Length; c++)
             {
-                if (controller(str[c]))
+                if (shouldSplit(inputString[c]))
                 {
-                    yield return str.Substring(nextPiece, c - nextPiece);
+                    yield return inputString.Substring(nextPiece, c - nextPiece);
                     nextPiece = c + 1;
                 }
             }
 
-            yield return str.Substring(nextPiece);
+            yield return inputString.Substring(nextPiece);
         }
 
-        public static string TrimMatchingQuotes(this string input, char quote)
+        private static string TrimMatchingQuotes(string inputString, char quote)
         {
-            if ((input.Length >= 2) &&
-                (input[0] == quote) && (input[input.Length - 1] == quote))
-                return input.Substring(1, input.Length - 2);
+            if ((inputString.Length >= 2) &&
+                (inputString[0] == quote) && (inputString[inputString.Length - 1] == quote))
+                return inputString.Substring(1, inputString.Length - 2);
 
-            return input;
+            return inputString;
         }
     }
 }
