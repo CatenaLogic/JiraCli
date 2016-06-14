@@ -36,7 +36,7 @@ namespace JiraCli.Tests.IntegrationTests
                 UserName = JiraUser,
                 Password = JiraPassword,
                 Version = version,
-                Issues = issues
+                Issues = issues ?? new string[] { }
             };
 
             return context;
@@ -79,8 +79,8 @@ namespace JiraCli.Tests.IntegrationTests
             var createStableVersionContext = CreateContext("2.0.0");
             Assert.IsTrue(await action.Execute(createStableVersionContext));
         }
-
         
+     
         [TestCase("TS-1,TS-2,TS-3")]
         public async Task AssignVersion(string issueNumbers)
         {

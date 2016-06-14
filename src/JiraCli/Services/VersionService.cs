@@ -51,12 +51,10 @@ namespace JiraCli.Services
             var existingVersion = GetProjectVersion(jiraRestClient, projectKey, version);
             if (existingVersion == null)
             {
-                var error = string.Format("Version '{0}' does not exist/ Ensure you have created this version first.", version);
-                Log.Error(error);
-                throw new InvalidOperationException(error);
+                Log.ErrorAndThrowException<InvalidOperationException>($"Version '{version}' does not exist / ensure you have created this version first");
             }
 
-            Log.Info("Version '{0}' exists", version);
+            Log.Info($"Version '{version}' exists, going to set this as FixVersion for '{issues.Length}' issues");
 
             // update issues
             var issueUpdate = new JiraIssueUpdate();
@@ -88,9 +86,7 @@ namespace JiraCli.Services
 
                 if (existingVersion.Released)
                 {
-                    var error = string.Format("Version '{0}' is already released, are you re-releasing an existing version?", version);
-                    Log.Error(error);
-                    throw new InvalidOperationException(error);
+                    Log.ErrorAndThrowException<InvalidOperationException>($"Version '{version}' is already released, are you re-releasing an existing version?");
                 }
 
                 return;
@@ -101,9 +97,7 @@ namespace JiraCli.Services
             var project = GetProject(jiraRestClient, projectKey);
             if (project == null)
             {
-                var error = string.Format("Project '{0}' cannot be found or current user does not have access to the project", projectKey);
-                Log.Error(error);
-                throw new InvalidOperationException(error);
+                Log.ErrorAndThrowException<InvalidOperationException>($"Project '{projectKey}' cannot be found or current user does not have access to the project");
             }
 
             jiraRestClient.CreateProjectVersion(new JiraProjectVersion
@@ -126,9 +120,7 @@ namespace JiraCli.Services
             var projectVersion = GetProjectVersion(jiraRestClient, projectKey, version);
             if (projectVersion == null)
             {
-                var error = string.Format("Version {0} does not exist, make sure to create it first", version);
-                Log.Error(error);
-                throw new InvalidOperationException(error);
+                Log.ErrorAndThrowException<InvalidOperationException>($"Version '{version}' does not exist / ensure you have created this version first");
             }
 
             if (projectVersion.Released)

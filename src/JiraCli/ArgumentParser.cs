@@ -11,6 +11,7 @@ namespace JiraCli
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.Text.RegularExpressions;
     using Catel.Logging;
 
     public static class ArgumentParser
@@ -19,7 +20,8 @@ namespace JiraCli
 
         public static Context ParseArguments(string commandLineArguments)
         {
-            return ParseArguments(commandLineArguments.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList());
+            var args = SplitCommandLine(commandLineArguments).ToArray();
+            return ParseArguments(args); // ParseArguments(commandLineArguments.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList());
         }
 
         public static Context ParseArguments(params string[] commandLineArguments)
@@ -109,7 +111,7 @@ namespace JiraCli
 
                 if (IsSwitch("issues", name))
                 {
-                    context.Issues = value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    context.Issues = SplitCsv(value);
                     continue;
                 }
 
@@ -125,6 +127,12 @@ namespace JiraCli
             }
 
             return context;
+        }
+
+        private static string[] SplitCsv(string value)
+        {
+            var splitAndTrimmed = value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()).ToArray();
+            return splitAndTrimmed;
         }
 
         private static bool IsSwitch(string switchName, string value)
@@ -156,6 +164,61 @@ namespace JiraCli
                    IsSwitch("h", singleArgument) ||
                    IsSwitch("help", singleArgument) ||
                    IsSwitch("?", singleArgument);
+        }
+
+        //public static IEnumerable<string> SplitCSV(string input)
+        //{
+        //    Regex csvSplit = new Regex("(?:^|,)(\"(?:[^\"]+|\"\")*\"|[^,]*)", RegexOptions.Compiled);
+
+        //    foreach (Match match in csvSplit.Matches(input))
+        //    {
+        //        yield return match.Value.TrimStart(',').Trim();
+        //    }
+        //}
+
+        /// <summary>
+        /// Shamelessly taken from stackoverflow: http://stackoverflow.com/questions/298830/split-string-containing-command-line-parameters-into-string-in-c-sharp/298990#298990
+        /// </summary>
+        /// <param name="commandLine"></param>
+        /// <returns></returns>
+        public static IEnumerable<string> SplitCommandLine(string commandLine)
+        {
+            bool inQuotes = false;
+
+            return commandLine.Split(c =>
+            {
+                if (c == '\"')
+                    inQuotes = !inQuotes;
+
+                return !inQuotes && c == ' ';
+            })
+                              .Select(arg => arg.Trim().TrimMatchingQuotes('\"'))
+                              .Where(arg => !string.IsNullOrEmpty(arg));
+        }
+
+        public static IEnumerable<string> Split(this string str, Func<char, bool> controller)
+        {
+            int nextPiece = 0;
+
+            for (int c = 0; c < str.Length; c++)
+            {
+                if (controller(str[c]))
+                {
+                    yield return str.Substring(nextPiece, c - nextPiece);
+                    nextPiece = c + 1;
+                }
+            }
+
+            yield return str.Substring(nextPiece);
+        }
+
+        public static string TrimMatchingQuotes(this string input, char quote)
+        {
+            if ((input.Length >= 2) &&
+                (input[0] == quote) && (input[input.Length - 1] == quote))
+                return input.Substring(1, input.Length - 2);
+
+            return input;
         }
     }
 }

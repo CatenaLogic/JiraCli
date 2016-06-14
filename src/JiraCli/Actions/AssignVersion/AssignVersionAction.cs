@@ -39,7 +39,7 @@ namespace JiraCli
                 Log.ErrorAndThrowException<JiraCliException>("Version is missing");
             }
 
-            if (context.Issues == null || !context.Issues.Any())
+            if (!context.Issues.Any())
             {
                 Log.ErrorAndThrowException<JiraCliException>("Issues are missing.");
             }
