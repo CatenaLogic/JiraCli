@@ -30,6 +30,18 @@ namespace JiraCli
             var responseJson = jiraRestClient.ExecuteRequestRaw(Method.POST, resource, requestJson);
         }
 
+
+        public static void UpdateIssue(this IJiraRestClient jiraRestClient, string issueNumber, JiraIssueUpdate updateIssue)
+        {
+            Argument.IsNotNull(() => jiraRestClient);
+            Argument.IsNotNull(() => updateIssue);
+
+            var requestJson = JsonConvert.SerializeObject(updateIssue, GetJsonSettings());
+
+            var resource = $"rest/api/2/issue/{issueNumber}";
+            var responseJson = jiraRestClient.ExecuteRequestRaw(Method.PUT, resource, requestJson);
+        }
+
         public static void UpdateProjectVersion(this IJiraRestClient jiraRestClient, JiraProjectVersion projectVersion)
         {
             Argument.IsNotNull(() => jiraRestClient);

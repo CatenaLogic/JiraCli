@@ -14,5 +14,6 @@ namespace JiraCli.Services
         void CreateVersion(IJiraRestClient jiraRestClient, string projectKey, string version);
         void ReleaseVersion(IJiraRestClient jiraRestClient, string projectKey, string version);
         void MergeVersions(IJiraRestClient jiraRestClient, string projectKey, string version);
+        void AssignVersionToIssues(IJiraRestClient jiraRestClient, string projectKey, string version, string[] issues);
     }
 }

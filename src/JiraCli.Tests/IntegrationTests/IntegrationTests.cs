@@ -7,6 +7,7 @@
 
 namespace JiraCli.Tests.IntegrationTests
 {
+    using System;
     using System.Threading.Tasks;
     using Catel;
     using Catel.IoC;
@@ -26,7 +27,7 @@ namespace JiraCli.Tests.IntegrationTests
             return ServiceLocator.Default.ResolveType<T>();
         }
 
-        private Context CreateContext(string version)
+        private Context CreateContext(string version, string[] issues = null)
         {
             var context = new Context
             {
@@ -34,7 +35,8 @@ namespace JiraCli.Tests.IntegrationTests
                 Project = JiraProject,
                 UserName = JiraUser,
                 Password = JiraPassword,
-                Version = version
+                Version = version,
+                Issues = issues ?? new string[] { }
             };
 
             return context;
@@ -76,6 +78,21 @@ namespace JiraCli.Tests.IntegrationTests
 
             var createStableVersionContext = CreateContext("2.0.0");
             Assert.IsTrue(await action.Execute(createStableVersionContext));
+        }
+        
+     
+        [TestCase("TS-1,TS-2,TS-3")]
+        public async Task AssignVersion(string issueNumbers)
+        {
+
+            var actionManager = ResolveService<IActionManager>();
+
+            var action = actionManager.GetAction("AssignVersion");
+            var issues = issueNumbers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+            var createV100Context = CreateContext("1.0.0", issues);
+            Assert.IsTrue(await action.Execute(createV100Context));
+
         }
     }
 }

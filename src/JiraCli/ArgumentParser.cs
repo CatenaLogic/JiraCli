@@ -11,6 +11,7 @@ namespace JiraCli
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.Text.RegularExpressions;
     using Catel.Logging;
 
     public static class ArgumentParser
@@ -19,7 +20,8 @@ namespace JiraCli
 
         public static Context ParseArguments(string commandLineArguments)
         {
-            return ParseArguments(commandLineArguments.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList());
+            var args = SplitCommandLine(commandLineArguments).ToArray();
+            return ParseArguments(args);
         }
 
         public static Context ParseArguments(params string[] commandLineArguments)
@@ -107,6 +109,12 @@ namespace JiraCli
                     continue;
                 }
 
+                if (IsSwitch("issues", name))
+                {
+                    context.Issues = SplitCsv(value);
+                    continue;
+                }
+
                 //if (IsSwitch("ci", name))
                 //{
                 //    bool isCi;
@@ -119,6 +127,12 @@ namespace JiraCli
             }
 
             return context;
+        }
+
+        private static string[] SplitCsv(string value)
+        {
+            var splitAndTrimmed = value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()).ToArray();
+            return splitAndTrimmed;
         }
 
         private static bool IsSwitch(string switchName, string value)
@@ -150,6 +164,51 @@ namespace JiraCli
                    IsSwitch("h", singleArgument) ||
                    IsSwitch("help", singleArgument) ||
                    IsSwitch("?", singleArgument);
+        }
+
+        /// <summary>
+        /// Shamelessly taken from stackoverflow: http://stackoverflow.com/questions/298830/split-string-containing-command-line-parameters-into-string-in-c-sharp/298990#298990
+        /// </summary>
+        /// <param name="commandLine"></param>
+        /// <returns></returns>
+        public static IEnumerable<string> SplitCommandLine(string commandLine)
+        {
+            bool inQuotes = false;
+
+            return Split(commandLine, c =>
+            {
+                if (c == '\"')
+                    inQuotes = !inQuotes;
+
+                return !inQuotes && c == ' ';
+            })
+            .Select(arg => TrimMatchingQuotes(arg.Trim(), '\"'))
+            .Where(arg => !string.IsNullOrEmpty(arg));
+        }
+
+        private static IEnumerable<string> Split(string inputString, Predicate<char> shouldSplit)
+        {
+            int nextPiece = 0;
+
+            for (int c = 0; c < inputString.Length; c++)
+            {
+                if (shouldSplit(inputString[c]))
+                {
+                    yield return inputString.Substring(nextPiece, c - nextPiece);
+                    nextPiece = c + 1;
+                }
+            }
+
+            yield return inputString.Substring(nextPiece);
+        }
+
+        private static string TrimMatchingQuotes(string inputString, char quote)
+        {
+            if ((inputString.Length >= 2) &&
+                (inputString[0] == quote) && (inputString[inputString.Length - 1] == quote))
+                return inputString.Substring(1, inputString.Length - 2);
+
+            return inputString;
         }
     }
 }

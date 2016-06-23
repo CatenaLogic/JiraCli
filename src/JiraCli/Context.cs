@@ -15,6 +15,7 @@ namespace JiraCli
 
         public Context()
         {
+            this.Issues = new string[] { };
         }
 
         public bool IsHelp { get; set; }
@@ -28,6 +29,8 @@ namespace JiraCli
 
         public string Project { get; set; }
         public string Version { get; set; }
+
+        public string[] Issues { get; set; }
 
         public bool MergeVersions { get; set; }
 

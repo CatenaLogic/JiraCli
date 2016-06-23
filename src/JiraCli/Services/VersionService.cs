@@ -10,6 +10,7 @@ namespace JiraCli.Services
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using Atlassian.Jira;
     using Atlassian.Jira.Remote;
     using Catel;
@@ -38,6 +39,36 @@ namespace JiraCli.Services
             _versionInfoService = versionInfoService;
         }
 
+        public void AssignVersionToIssues(IJiraRestClient jiraRestClient, string projectKey, string version, string[] issues)
+        {
+            Argument.IsNotNull(() => jiraRestClient);
+            Argument.IsNotNullOrWhitespace(() => projectKey);
+            Argument.IsNotNullOrWhitespace(() => version);
+            Argument.IsNotNullOrEmptyArray(() => issues);
+
+            Log.Debug("Checking if version already exists");
+
+            var existingVersion = GetProjectVersion(jiraRestClient, projectKey, version);
+            if (existingVersion == null)
+            {
+                Log.ErrorAndThrowException<InvalidOperationException>($"Version '{version}' does not exist / ensure you have created this version first");
+            }
+
+            Log.Info($"Version '{version}' exists, going to set this as FixVersion for '{issues.Length}' issues");
+
+            // update issues
+            var issueUpdate = new JiraIssueUpdate();
+            issueUpdate.AddFieldValue("fixVersions", new { name = version });
+            foreach (var issue in issues)
+            {
+                Log.Info("Updating issue '{0}'", issue);
+                jiraRestClient.UpdateIssue(issue, issueUpdate);
+
+                Log.Info("Issue updated.");
+            }
+
+        }
+
         public void CreateVersion(IJiraRestClient jiraRestClient, string projectKey, string version)
         {
             Argument.IsNotNull(() => jiraRestClient);
@@ -55,9 +86,7 @@ namespace JiraCli.Services
 
                 if (existingVersion.Released)
                 {
-                    var error = string.Format("Version '{0}' is already released, are you re-releasing an existing version?", version);
-                    Log.Error(error);
-                    throw new InvalidOperationException(error);
+                    Log.ErrorAndThrowException<InvalidOperationException>($"Version '{version}' is already released, are you re-releasing an existing version?");
                 }
 
                 return;
@@ -68,9 +97,7 @@ namespace JiraCli.Services
             var project = GetProject(jiraRestClient, projectKey);
             if (project == null)
             {
-                var error = string.Format("Project '{0}' cannot be found or current user does not have access to the project", projectKey);
-                Log.Error(error);
-                throw new InvalidOperationException(error);
+                Log.ErrorAndThrowException<InvalidOperationException>($"Project '{projectKey}' cannot be found or current user does not have access to the project");
             }
 
             jiraRestClient.CreateProjectVersion(new JiraProjectVersion
@@ -93,9 +120,7 @@ namespace JiraCli.Services
             var projectVersion = GetProjectVersion(jiraRestClient, projectKey, version);
             if (projectVersion == null)
             {
-                var error = string.Format("Version {0} does not exist, make sure to create it first", version);
-                Log.Error(error);
-                throw new InvalidOperationException(error);
+                Log.ErrorAndThrowException<InvalidOperationException>($"Version '{version}' does not exist / ensure you have created this version first");
             }
 
             if (projectVersion.Released)

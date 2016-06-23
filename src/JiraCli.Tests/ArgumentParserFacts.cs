@@ -38,6 +38,18 @@ namespace JiraCli.Test
             Assert.IsTrue(context.IsHelp);
         }
 
+        [TestCase("-project TT -version 0.0.2 -issues \"TEST-1,TEST-2,TEST-3\"")]
+        [TestCase("-project TT -version 0.0.1-unstable0001 -issues \"TEST-1, TEST-2, TEST-3\"")]
+        public void CorrectlyParsesAssignVersionCommand(string commandLine)
+        {
+            var context = ArgumentParser.ParseArguments(commandLine);
+
+            Assert.IsNotNull(context.Issues);
+            Assert.IsNotEmpty(context.Issues);
+            Assert.IsNotNullOrEmpty(context.Project);
+            Assert.IsNotNullOrEmpty(context.Version);
+        }
+
         //[TestCase]
         //public void CorrectlyParsesVersion()
         //{
@@ -84,4 +96,6 @@ namespace JiraCli.Test
             ExceptionTester.CallMethodAndExpectException<JiraCliException>(() => ArgumentParser.ParseArguments("solutionDirectory -x logFilePath"));
         }
     }
+
+  
 }
