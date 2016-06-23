@@ -16,7 +16,9 @@ namespace JiraCli.Tests.Services
         [TestCase("1.0.0", "1.1.0", false)]
         [TestCase("1.0.0-unstable0016", "1.1.0", false)]
         [TestCase("1.0.0", "1.1.0-unstable0016", false)]
+        [TestCase("1.0.0", "1.0.0-beta0016", false)]
         [TestCase("1.0.0", "1.0.0-unstable0016", true)]
+        [TestCase("1.0.0", "0.0.1-unstable0016", true)]
         public void TheShouldBeMergedMethod(string versionBeingReleased, string versionToCheck, bool expectedValue)
         {
             var mergeVersionService = new MergeVersionService(new VersionInfoService());
@@ -25,5 +27,6 @@ namespace JiraCli.Tests.Services
 
             Assert.AreEqual(expectedValue, shouldBeMerged);
         }
+       
     }
 }

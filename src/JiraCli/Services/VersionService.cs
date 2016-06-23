@@ -145,7 +145,7 @@ namespace JiraCli.Services
 
             Log.Info("Merging all prerelease versions into '{0}'", version);
 
-            if (!_versionInfoService.IsStableVersion(version))
+            if (!_versionInfoService.IsReleaseVersion(version))
             {
                 Log.Info("Version '{0}' is not a stable version, versions will not be merged", version);
                 return;
@@ -196,5 +196,7 @@ namespace JiraCli.Services
 
             return existingVersion;
         }
+
+       
     }
 }

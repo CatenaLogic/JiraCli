@@ -9,6 +9,9 @@ namespace JiraCli.Services
 {
     public interface IVersionInfoService
     {
-        bool IsStableVersion(string version);
+        bool IsPreReleaseWithLabelPrefix(string version, string labelPrefix);
+        bool IsReleaseVersion(string version);
+        VersionComparisonResult CompareVersions(string versionToCheck, string versionBeingReleased);
+
     }
 }
