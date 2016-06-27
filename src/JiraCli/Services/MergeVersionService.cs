@@ -47,9 +47,11 @@ namespace JiraCli.Services
             {
                 case VersionComparisonResult.LessThan:
                     return true;
+
                 case VersionComparisonResult.Unknown:
-                    Log.Warning("Unable to compare version {0} with version {1}. Version {0} will not be included in the Merge.", versionToCheck, versionBeingReleased);
+                    Log.Warning("Unable to compare version '{0}' with version '{1}'. Version will not be included in the Merge.", versionToCheck, versionBeingReleased);
                     return false;
+
                 default:
                     return false;
             }

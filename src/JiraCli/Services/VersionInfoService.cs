@@ -17,7 +17,7 @@ namespace JiraCli.Services
         {
             Argument.IsNotNull(() => version);
 
-            // Can assume semver format.
+            // Attempt semver format.
             SemVersion semVer;
             if (SemVersion.TryParse(version, out semVer))
             {
@@ -39,7 +39,6 @@ namespace JiraCli.Services
             }
 
             return false;
-
         }
 
         public VersionComparisonResult CompareVersions(string versionToCheck, string versionToCompareAgainst)
