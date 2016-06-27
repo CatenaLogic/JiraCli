@@ -29,17 +29,33 @@ namespace JiraCli.Services
             Argument.IsNotNull(() => versionBeingReleased);
             Argument.IsNotNull(() => versionToCheck);
 
-            if (!_versionInfoService.IsStableVersion(versionBeingReleased))
+            // Only non pre-release versions can be merged in to.
+            if (!_versionInfoService.IsReleaseVersion(versionBeingReleased))
             {
                 return false;
             }
 
-            if (versionToCheck.StartsWith(versionBeingReleased))
+            // Only pre-release versions with an "unstable" label prefix are valid to merge.
+            if (!_versionInfoService.IsPreReleaseWithLabelPrefix(versionToCheck, "unstable"))
             {
-                return true;
+                return false;
             }
 
-            return false;
+            // version must be less than the version being released.
+            var versionComparison = _versionInfoService.CompareVersions(versionToCheck, versionBeingReleased);
+            switch (versionComparison)
+            {
+                case VersionComparisonResult.LessThan:
+                    return true;
+
+                case VersionComparisonResult.Unknown:
+                    Log.Warning("Unable to compare version '{0}' with version '{1}'. Version will not be included in the Merge.", versionToCheck, versionBeingReleased);
+                    return false;
+
+                default:
+                    return false;
+            }
+
         }
     }
 }
