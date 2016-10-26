@@ -36,7 +36,13 @@ namespace JiraCli.Services
             }
 
             // Only pre-release versions with an "unstable" label prefix are valid to merge.
-            if (!_versionInfoService.IsPreReleaseWithLabelPrefix(versionToCheck, "unstable"))
+            // semVer.Prerelease.ToLowerInvariant().StartsWith(labelPrefix.ToLowerInvariant())
+
+            if (!_versionInfoService.IsPreRelease(versionToCheck, (label) =>
+            {
+                return label.ToLowerInvariant().StartsWith("unstable") ||
+                       label.ToLowerInvariant().StartsWith("alpha");
+            }))
             {
                 return false;
             }

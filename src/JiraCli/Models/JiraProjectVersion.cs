@@ -7,6 +7,7 @@
 
 namespace JiraCli.Models
 {
+    using Newtonsoft.Json;
     using System;
 
     public class JiraProjectVersion : JiraObjectBase
@@ -19,9 +20,10 @@ namespace JiraCli.Models
 
         public bool Released { get; set; }
 
+        [JsonConverter(typeof(CustomDateTimeConverter))]
         public DateTime? ReleaseDate { get; set; }
 
-        public DateTime? UserReleaseDate { get; set; }
+        public string UserReleaseDate { get; set; }
 
         public string Project { get; set; }
 

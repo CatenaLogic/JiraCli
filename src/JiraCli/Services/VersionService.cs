@@ -10,13 +10,10 @@ namespace JiraCli.Services
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using Atlassian.Jira;
-    using Atlassian.Jira.Remote;
     using Catel;
     using Catel.Logging;
     using Models;
-    using RestSharp;
 
     public class VersionService : IVersionService
     {
@@ -161,6 +158,8 @@ namespace JiraCli.Services
                 if (_mergeVersionService.ShouldBeMerged(version, remoteVersion.Name))
                 {
                     versionsToMerge.Add(remoteVersion);
+
+                   
                 }
             }
 
