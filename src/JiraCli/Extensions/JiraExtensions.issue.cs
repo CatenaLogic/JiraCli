@@ -12,13 +12,11 @@ namespace JiraCli
     using Catel;
     using Models;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
     using RestSharp;
 
     public static partial class JiraExtensions
     {
-        public static List<JiraIssue> GetIssues(this IJiraRestClient jiraRestClient, string jql, int startAt = 0, int maxResults = 200,
-            string[] fields = null)
+        public static List<JiraIssue> GetIssues(this IJiraRestClient jiraRestClient, string jql, int startAt = 0, int maxResults = 200, string[] fields = null)
         {
             Argument.IsNotNull(() => jiraRestClient);
 
@@ -35,18 +33,30 @@ namespace JiraCli
             {
                 searchRequest.Fields.AddRange(fields);
             }
+            else
+            {
+                searchRequest.Fields.Add("id");
+                searchRequest.Fields.Add("key");
+                searchRequest.Fields.Add("parent");
+                searchRequest.Fields.Add("status");
+                searchRequest.Fields.Add("issuetype");
+                
+
+            }
 
             var requestJson = JsonConvert.SerializeObject(searchRequest, GetJsonSettings());
             var responseJson = jiraRestClient.ExecuteRequestRaw(Method.POST, "rest/api/2/search", requestJson);
 
-            foreach (var jsonElement in responseJson.Children())
-            {
-                var issue = JsonConvert.DeserializeObject<JiraIssue>(jsonElement.ToString());
+            SearchResponse response = JsonConvert.DeserializeObject<SearchResponse>(responseJson.ToString());
+            return response.IssueDescriptions;
+            //foreach (var jsonElement in responseJson.Children())
+            //{
+            //    var issue = JsonConvert.DeserializeObject<JiraIssue>(jsonElement.ToString());
 
-                issues.Add(issue);
-            }
+            //    issues.Add(issue);
+            //}
 
-            return issues;
+           // return issues;
         }
     }
 }

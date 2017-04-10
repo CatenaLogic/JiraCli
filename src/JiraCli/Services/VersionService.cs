@@ -36,7 +36,7 @@ namespace JiraCli.Services
             _versionInfoService = versionInfoService;
         }
 
-        public void AssignVersionToIssues(IJiraRestClient jiraRestClient, string projectKey, string version, string[] issues)
+        public string[] AssignVersionToIssues(IJiraRestClient jiraRestClient, string projectKey, string version, string[] issues)
         {
             Argument.IsNotNull(() => jiraRestClient);
             Argument.IsNotNullOrWhitespace(() => projectKey);
@@ -56,13 +56,49 @@ namespace JiraCli.Services
             // update issues
             var issueUpdate = new JiraIssueUpdate();
             issueUpdate.AddFieldValue("fixVersions", new { name = version });
-            foreach (var issue in issues)
-            {
-                Log.Info("Updating issue '{0}'", issue);
-                jiraRestClient.UpdateIssue(issue, issueUpdate);
 
+            var issuesIds = string.Join(",", issues);
+            var jql = "project = " + projectKey + " AND key in (" + issuesIds + ") ORDER BY priority DESC, updated DESC";
+
+            var assignedVersions = new List<string>();
+
+            var retrievedIssues = jiraRestClient.GetIssues(jql);
+            foreach (var item in retrievedIssues)
+            {
+                Log.Info("Updating issue '{0}'", item.Key);
+                // if the item has a parent (i.e like a subtask)
+                if (item.Fields != null)
+                {
+                    if (item.Fields.IssueType != null && item.Fields.IssueType.SubTask)
+                    {
+                        if(item.Fields.Parent == null)
+                        {
+                            Log.Error("Could not retrieve parent task for subtask: {0}", item.Key);
+                            continue;          // do not attempt to apply to subtask.             
+                        }
+
+                        // get parent and assign that instead.
+                        Log.Info("Issue '{0}' is a subtask. Will assign version to the parent task: '{1}' instead.", item.Key, item.Fields.Parent.ProxyKey);
+                        jiraRestClient.UpdateIssue(item.Fields.Parent.ProxyKey, issueUpdate);
+                        assignedVersions.Add(item.Fields.Parent.ProxyKey);
+                        continue;
+                    }
+                }
+
+                jiraRestClient.UpdateIssue(item.ProxyKey, issueUpdate);
+                assignedVersions.Add(item.ProxyKey);
                 Log.Info("Issue updated.");
+
+                //if (assignParentOfSubtasks)
+                //{
+                //  //  var issuesIds = string.Join(",", issues);
+
+
+                //}
+
             }
+
+            return assignedVersions.ToArray();
 
         }
 
@@ -159,7 +195,7 @@ namespace JiraCli.Services
                 {
                     versionsToMerge.Add(remoteVersion);
 
-                   
+
                 }
             }
 
@@ -196,6 +232,6 @@ namespace JiraCli.Services
             return existingVersion;
         }
 
-       
+
     }
 }
