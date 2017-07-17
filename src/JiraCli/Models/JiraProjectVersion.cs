@@ -9,6 +9,7 @@ namespace JiraCli.Models
 {
     using Newtonsoft.Json;
     using System;
+    using Formatters;
 
     public class JiraProjectVersion : JiraObjectBase
     {
