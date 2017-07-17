@@ -7,15 +7,12 @@
 
 namespace JiraCli
 {
-    using System;
     using System.Collections.Generic;
     using Atlassian.Jira;
     using Catel;
     using Models;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
     using RestSharp;
-    using RestSharp.Serializers;
 
     public static partial class JiraExtensions
     {
@@ -84,7 +81,7 @@ namespace JiraCli
             var projectVersions = new List<JiraProjectVersion>();
 
             var resource = string.Format("rest/api/2/project/{0}/versions", projectKey);
-            var responseJson = jiraRestClient.ExecuteRequest(Method.GET, resource);
+            var responseJson = jiraRestClient.ExecuteRequest(Method.GET, resource);          
 
             foreach (var jsonElement in responseJson.Children())
             {

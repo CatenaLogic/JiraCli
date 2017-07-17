@@ -95,6 +95,40 @@ namespace JiraCli.Services
 
         }
 
+        public bool IsPreRelease(string version, Predicate<string> prereleaseLabelChecker)
+        {
+            Argument.IsNotNull(() => version);
+
+            // Can assume semver format.
+            SemVersion semVer;
+            if (SemVersion.TryParse(version, out semVer))
+            {
+                if (!string.IsNullOrWhiteSpace(semVer.Prerelease))
+                {
+                    return prereleaseLabelChecker(semVer.Prerelease);
+                }
+            }
+
+            return false;
+        }
+
+        public bool IsPreRelease(string version)
+        {
+            Argument.IsNotNull(() => version);            
+
+            // Can assume semver format.
+            SemVersion semVer;
+            if (SemVersion.TryParse(version, out semVer))
+            {
+                if (!string.IsNullOrWhiteSpace(semVer.Prerelease))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public bool IsPreReleaseWithLabelPrefix(string version, string labelPrefix)
         {
             Argument.IsNotNull(() => version);
