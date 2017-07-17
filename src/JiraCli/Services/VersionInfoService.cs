@@ -122,7 +122,7 @@ namespace JiraCli.Services
             {
                 if (!string.IsNullOrWhiteSpace(semVer.Prerelease))
                 {
-                    
+                    return true;
                 }
             }
 
