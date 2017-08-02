@@ -71,7 +71,7 @@ namespace JiraCli.Services
                 {
                     if (item.Fields.IssueType != null && item.Fields.IssueType.SubTask)
                     {
-                        if(item.Fields.Parent == null)
+                        if (item.Fields.Parent == null)
                         {
                             Log.Error("Could not retrieve parent task for subtask: {0}", item.Key);
                             continue;          // do not attempt to apply to subtask.             
@@ -133,6 +133,7 @@ namespace JiraCli.Services
                 Log.ErrorAndThrowException<InvalidOperationException>($"Project '{projectKey}' cannot be found or current user does not have access to the project");
             }
 
+
             jiraRestClient.CreateProjectVersion(new JiraProjectVersion
             {
                 Project = project.Key,
@@ -140,6 +141,8 @@ namespace JiraCli.Services
             });
 
             Log.Info("Created version '{0}'", version);
+
+
         }
 
         public void ReleaseVersion(IJiraRestClient jiraRestClient, string projectKey, string version)
@@ -162,7 +165,18 @@ namespace JiraCli.Services
                 return;
             }
 
+            projectVersion.UserReleaseDate = null;
             projectVersion.ReleaseDate = DateTime.Now;
+
+            //if (string.IsNullOrWhiteSpace(projectVersion.UserReleaseDate))
+            //{
+               
+            //}
+            //else
+            //{
+               
+            //}
+           
             projectVersion.Released = true;
 
             jiraRestClient.UpdateProjectVersion(projectVersion);
