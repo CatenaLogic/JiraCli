@@ -133,13 +133,17 @@ namespace JiraCli.Services
                 Log.ErrorAndThrowException<InvalidOperationException>($"Project '{projectKey}' cannot be found or current user does not have access to the project");
             }
 
-            jiraRestClient.CreateProjectVersion(new JiraProjectVersion
+            if(existingVersion == null)
             {
-                Project = project.Key,
-                Name = version,
-            });
+                jiraRestClient.CreateProjectVersion(new JiraProjectVersion
+                {
+                    Project = project.Key,
+                    Name = version,
+                });
 
-            Log.Info("Created version '{0}'", version);
+                Log.Info("Created version '{0}'", version);
+            }
+           
         }
 
         public void ReleaseVersion(IJiraRestClient jiraRestClient, string projectKey, string version)
