@@ -69,19 +69,29 @@ namespace JiraCli.Services
                 // if the item has a parent (i.e like a subtask)
                 if (item.Fields != null)
                 {
-                    if (item.Fields.IssueType != null && item.Fields.IssueType.SubTask)
+                    if (item.Fields.IssueType != null)
                     {
-                        if (item.Fields.Parent == null)
+                        if (item.Fields.IssueType.SubTask)
                         {
-                            Log.Error("Could not retrieve parent task for subtask: {0}", item.Key);
-                            continue;          // do not attempt to apply to subtask.             
+                            if (item.Fields.Parent == null)
+                            {
+                                Log.Error("Could not retrieve parent task for subtask: {0}", item.Key);
+                                continue;          // do not attempt to apply to subtask.             
+                            }
+
+                            // get parent and assign that instead.
+                            Log.Info("Issue '{0}' is a subtask. Will assign version to the parent task: '{1}' instead.", item.Key, item.Fields.Parent.ProxyKey);
+                            jiraRestClient.UpdateIssue(item.Fields.Parent.ProxyKey, issueUpdate);
+                            assignedVersions.Add(item.Fields.Parent.ProxyKey);
+                            continue;
                         }
 
-                        // get parent and assign that instead.
-                        Log.Info("Issue '{0}' is a subtask. Will assign version to the parent task: '{1}' instead.", item.Key, item.Fields.Parent.ProxyKey);
-                        jiraRestClient.UpdateIssue(item.Fields.Parent.ProxyKey, issueUpdate);
-                        assignedVersions.Add(item.Fields.Parent.ProxyKey);
-                        continue;
+                        // queries cannot be assigned to versions.
+                        if (item.Fields.IssueType.Name.ToLowerInvariant() == "query")
+                        {
+                            Log.Info("Issue '{0}' is a query. It will be skipped as we cannot assing queries to a release.", item.Key);
+                            continue;
+                        }
                     }
                 }
 
@@ -170,13 +180,13 @@ namespace JiraCli.Services
 
             //if (string.IsNullOrWhiteSpace(projectVersion.UserReleaseDate))
             //{
-               
+
             //}
             //else
             //{
-               
+
             //}
-           
+
             projectVersion.Released = true;
 
             jiraRestClient.UpdateProjectVersion(projectVersion);
