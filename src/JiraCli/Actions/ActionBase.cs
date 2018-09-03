@@ -47,7 +47,7 @@ namespace JiraCli
             }
             catch (Exception ex)
             {
-                Log.Error(ex);
+                Log.Error(exception: ex);
                 return false;
             }
         }

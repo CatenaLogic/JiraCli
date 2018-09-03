@@ -15,6 +15,7 @@ namespace JiraCli
     using Newtonsoft.Json.Linq;
     using Newtonsoft.Json.Serialization;
     using RestSharp;
+    using System.Diagnostics;
 
     public static partial class JiraExtensions
     {
@@ -47,8 +48,17 @@ namespace JiraCli
                 Value = jsonRequestBody
             });
 
-            var response = jiraRestClient.ExecuteRequest(restRequest);
-            return response.StatusCode != HttpStatusCode.NoContent ? JToken.Parse(response.Content) : new JObject();
+            try
+            {
+                var response = jiraRestClient.ExecuteRequest(restRequest);
+                return response.StatusCode != HttpStatusCode.NoContent ? JToken.Parse(response.Content) : new JObject();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Write(ex);
+                throw;
+            }
+          
         }
     }
 }
