@@ -129,6 +129,7 @@
     <Compile Include="Models\AvatarUrls.cs" />
     <Compile Include="Models\Fields.cs" />
     <Compile Include="Models\IssueKey.cs" />
+    <Compile Include="Formatters\CustomDateTimeConverter.cs" />
     <Compile Include="Models\JiraIssue.cs" />
     <Compile Include="Models\JiraIssueType.cs" />
     <Compile Include="Models\JiraIssueUpdate.cs" />

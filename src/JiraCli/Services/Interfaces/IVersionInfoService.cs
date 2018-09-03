@@ -4,11 +4,10 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-
-using System;
-
 namespace JiraCli.Services
 {
+    using System;
+
     public interface IVersionInfoService
     {
         bool IsPreRelease(string version, Predicate<string> labelChecker);

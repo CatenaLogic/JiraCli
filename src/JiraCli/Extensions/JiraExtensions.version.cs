@@ -7,24 +7,12 @@
 
 namespace JiraCli
 {
-    using System;
     using System.Collections.Generic;
     using Atlassian.Jira;
     using Catel;
     using Models;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
     using RestSharp;
-    using RestSharp.Serializers;
-    using Newtonsoft.Json.Converters;
-
-    class CustomDateTimeConverter : IsoDateTimeConverter
-    {
-        public CustomDateTimeConverter()
-        {
-            base.DateTimeFormat = "yyyy-MM-dd";
-        }
-    }
 
     public static partial class JiraExtensions
     {
@@ -93,12 +81,7 @@ namespace JiraCli
             var projectVersions = new List<JiraProjectVersion>();
 
             var resource = string.Format("rest/api/2/project/{0}/versions", projectKey);
-            var responseJson = jiraRestClient.ExecuteRequest(Method.GET, resource);
-
-            //var format = "yyyy-MM-dd"; // your datetime format
-            //var dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = format };
-
-           // var ld = JsonConvert.DeserializeObject<EoiDraftViewModel>(json, dateTimeConverter);
+            var responseJson = jiraRestClient.ExecuteRequest(Method.GET, resource);          
 
             foreach (var jsonElement in responseJson.Children())
             {
