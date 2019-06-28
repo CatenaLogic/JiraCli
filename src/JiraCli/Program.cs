@@ -31,7 +31,7 @@ namespace JiraCli
             try
             {
                 var jiraAutomation = TypeFactory.Default.CreateInstance<JiraAutomation>();
-                var task = jiraAutomation.Run(args, WaitForKeyPress);
+                var task = jiraAutomation.RunAsync(args, WaitForKeyPress);
                 task.Wait();
 
                 exitCode = task.Result;

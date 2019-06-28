@@ -36,13 +36,13 @@ namespace JiraCli
 
         protected abstract void ValidateContext(Context context);
 
-        public async Task<bool> Execute(Context context)
+        public async Task<bool> ExecuteAsync(Context context)
         {
             Argument.IsNotNull(() => context);
 
             try
             {
-                await Task.Factory.StartNew(() => ExecuteWithContext(context));
+                await Task.Factory.StartNew(() => ExecuteWithContextAsync(context));
                 return true;
             }
             catch (Exception ex)
@@ -52,7 +52,7 @@ namespace JiraCli
             }
         }
 
-        protected abstract void ExecuteWithContext(Context context);
+        protected abstract Task ExecuteWithContextAsync(Context context);
 
         protected IJiraRestClient CreateJira(Context context)
         {

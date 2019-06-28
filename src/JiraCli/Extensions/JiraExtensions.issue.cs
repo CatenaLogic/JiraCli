@@ -8,7 +8,8 @@
 namespace JiraCli
 {
     using System.Collections.Generic;
-    using Atlassian.Jira;
+    using System.Threading.Tasks;
+    using Atlassian.Jira.Remote;
     using Catel;
     using Models;
     using Newtonsoft.Json;
@@ -16,7 +17,7 @@ namespace JiraCli
 
     public static partial class JiraExtensions
     {
-        public static List<JiraIssue> GetIssues(this IJiraRestClient jiraRestClient, string jql, int startAt = 0, int maxResults = 200, string[] fields = null)
+        public static async Task<List<JiraIssue>> GetIssuesAsync(this IJiraRestClient jiraRestClient, string jql, int startAt = 0, int maxResults = 200, string[] fields = null)
         {
             Argument.IsNotNull(() => jiraRestClient);
 
@@ -45,9 +46,9 @@ namespace JiraCli
             }
 
             var requestJson = JsonConvert.SerializeObject(searchRequest, GetJsonSettings());
-            var responseJson = jiraRestClient.ExecuteRequestRaw(Method.POST, "rest/api/2/search", requestJson);
+            var responseJson = await jiraRestClient.ExecuteRequestRawAsync(Method.POST, "rest/api/2/search", requestJson);
 
-            SearchResponse response = JsonConvert.DeserializeObject<SearchResponse>(responseJson.ToString());
+            var response = JsonConvert.DeserializeObject<SearchResponse>(responseJson.ToString());
             return response.IssueDescriptions;
             //foreach (var jsonElement in responseJson.Children())
             //{

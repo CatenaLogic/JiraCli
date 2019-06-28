@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ArgumentParser.cs" company="CatenaLogic">
 //   Copyright (c) 2014 - 2014 CatenaLogic. All rights reserved.
 // </copyright>
@@ -35,7 +35,7 @@ namespace JiraCli
 
             if (commandLineArguments.Count == 0)
             {
-                Log.ErrorAndThrowException<JiraCliException>("Invalid number of arguments");
+                throw Log.ErrorAndCreateException<JiraCliException>("Invalid number of arguments");
             }
 
             var firstArgument = commandLineArguments.First();
@@ -47,7 +47,7 @@ namespace JiraCli
 
             if (commandLineArguments.Count < 2)
             {
-                Log.ErrorAndThrowException<JiraCliException>("Invalid number of arguments");
+                throw Log.ErrorAndCreateException<JiraCliException>("Invalid number of arguments");
             }
 
             var namedArguments = commandLineArguments.ToList();
@@ -123,7 +123,7 @@ namespace JiraCli
                 //    continue;
                 //}
 
-                Log.ErrorAndThrowException<JiraCliException>("Could not parse command line parameter '{0}'.", name);
+                throw Log.ErrorAndCreateException<JiraCliException>("Could not parse command line parameter '{0}'.", name);
             }
 
             return context;
@@ -154,7 +154,7 @@ namespace JiraCli
         {
             if (namedArguments.Count.IsOdd())
             {
-                Log.ErrorAndThrowException<JiraCliException>("Could not parse arguments: '{0}'.", string.Join(" ", commandLineArguments));
+                throw Log.ErrorAndCreateException<JiraCliException>("Could not parse arguments: '{0}'.", string.Join(" ", commandLineArguments));
             }
         }
 

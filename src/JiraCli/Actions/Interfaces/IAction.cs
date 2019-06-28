@@ -19,6 +19,6 @@ namespace JiraCli
 
         void Validate(Context context);
 
-        Task<bool> Execute(Context context);
+        Task<bool> ExecuteAsync(Context context);
     }
 }

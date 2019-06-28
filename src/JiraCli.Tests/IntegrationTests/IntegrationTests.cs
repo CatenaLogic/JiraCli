@@ -50,14 +50,14 @@ namespace JiraCli.Tests.IntegrationTests
             var action = actionManager.GetAction("CreateAndReleaseVersion");
 
             var createV100Context = CreateContext("1.0.0");
-            Assert.IsTrue(await action.Execute(createV100Context));
+            Assert.IsTrue(await action.ExecuteAsync(createV100Context));
 
             var createV110Context = CreateContext("1.1.0");
-            Assert.IsTrue(await action.Execute(createV110Context));
+            Assert.IsTrue(await action.ExecuteAsync(createV110Context));
 
             var createV111Context = CreateContext("1.1.1");
-            Assert.IsTrue(await action.Execute(createV111Context));
-            Assert.IsFalse(await action.Execute(createV111Context));
+            Assert.IsTrue(await action.ExecuteAsync(createV111Context));
+            Assert.IsFalse(await action.ExecuteAsync(createV111Context));
         }
 
         [TestCase]
@@ -68,16 +68,16 @@ namespace JiraCli.Tests.IntegrationTests
             var action = actionManager.GetAction("CreateAndReleaseVersion");
 
             var createV1Context = CreateContext("2.0.0-unstable42");
-            Assert.IsTrue(await action.Execute(createV1Context));
+            Assert.IsTrue(await action.ExecuteAsync(createV1Context));
 
             var createV2Context = CreateContext("2.0.0-unstable48");
-            Assert.IsTrue(await action.Execute(createV2Context));
+            Assert.IsTrue(await action.ExecuteAsync(createV2Context));
 
             var createV3Context = CreateContext("2.0.0-unstable56");
-            Assert.IsTrue(await action.Execute(createV3Context));
+            Assert.IsTrue(await action.ExecuteAsync(createV3Context));
 
             var createStableVersionContext = CreateContext("2.0.0");
-            Assert.IsTrue(await action.Execute(createStableVersionContext));
+            Assert.IsTrue(await action.ExecuteAsync(createStableVersionContext));
         }
         
      
@@ -91,7 +91,7 @@ namespace JiraCli.Tests.IntegrationTests
             var issues = issueNumbers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             var createV100Context = CreateContext("1.0.0", issues);
-            Assert.IsTrue(await action.Execute(createV100Context));
+            Assert.IsTrue(await action.ExecuteAsync(createV100Context));
 
         }
     }

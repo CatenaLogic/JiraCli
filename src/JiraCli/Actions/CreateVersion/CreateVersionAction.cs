@@ -7,6 +7,7 @@
 
 namespace JiraCli
 {
+    using System.Threading.Tasks;
     using Catel;
     using Catel.Logging;
     using Services;
@@ -30,20 +31,20 @@ namespace JiraCli
         {
             if (string.IsNullOrEmpty(context.Project))
             {
-                Log.ErrorAndThrowException<JiraCliException>("Project is missing");
+                throw Log.ErrorAndCreateException<JiraCliException>("Project is missing");
             }
 
             if (string.IsNullOrEmpty(context.Version))
             {
-                Log.ErrorAndThrowException<JiraCliException>("Version is missing");
+                throw Log.ErrorAndCreateException<JiraCliException>("Version is missing");
             }
         }
 
-        protected override void ExecuteWithContext(Context context)
+        protected override async Task ExecuteWithContextAsync(Context context)
         {
             var jira = CreateJira(context);
 
-            _versionService.CreateVersion(jira, context.Project, context.Version);
+            await _versionService.CreateVersionAsync(jira, context.Project, context.Version);
         }
     }
 }

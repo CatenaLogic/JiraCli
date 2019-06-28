@@ -37,22 +37,22 @@ namespace JiraCli
         {
             if (string.IsNullOrEmpty(UserName))
             {
-                Log.ErrorAndThrowException<JiraCliException>("User name is missing");
+                throw Log.ErrorAndCreateException<JiraCliException>("User name is missing");
             }
 
             if (string.IsNullOrEmpty(Password))
             {
-                Log.ErrorAndThrowException<JiraCliException>("Password is missing");
+                throw Log.ErrorAndCreateException<JiraCliException>("Password is missing");
             }
 
             if (string.IsNullOrEmpty(JiraUrl))
             {
-                Log.ErrorAndThrowException<JiraCliException>("Jira url is missing");
+                throw Log.ErrorAndCreateException<JiraCliException>("Jira url is missing");
             }
 
             if (string.IsNullOrEmpty(Action))
             {
-                Log.ErrorAndThrowException<JiraCliException>("Action is missing");
+                throw Log.ErrorAndCreateException<JiraCliException>("Action is missing");
             }
         }
     }

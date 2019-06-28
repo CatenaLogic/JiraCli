@@ -10,7 +10,9 @@ namespace JiraCli.Services
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Atlassian.Jira;
+    using Atlassian.Jira.Remote;
     using Catel;
     using Catel.Logging;
     using Models;
@@ -36,7 +38,7 @@ namespace JiraCli.Services
             _versionInfoService = versionInfoService;
         }
 
-        public string[] AssignVersionToIssues(IJiraRestClient jiraRestClient, string projectKey, string version, string[] issues)
+        public async Task<string[]> AssignVersionToIssuesAsync(IJiraRestClient jiraRestClient, string projectKey, string version, string[] issues)
         {
             Argument.IsNotNull(() => jiraRestClient);
             Argument.IsNotNullOrWhitespace(() => projectKey);
@@ -45,10 +47,10 @@ namespace JiraCli.Services
 
             Log.Debug("Checking if version already exists");
 
-            var existingVersion = GetProjectVersion(jiraRestClient, projectKey, version);
+            var existingVersion = GetProjectVersionAsync(jiraRestClient, projectKey, version);
             if (existingVersion == null)
             {
-                Log.ErrorAndThrowException<InvalidOperationException>($"Version '{version}' does not exist / ensure you have created this version first");
+                throw Log.ErrorAndCreateException<InvalidOperationException>($"Version '{version}' does not exist / ensure you have created this version first");
             }
 
             Log.Info($"Version '{version}' exists, going to set this as FixVersion for '{issues.Length}' issues");
@@ -62,7 +64,7 @@ namespace JiraCli.Services
 
             var assignedVersions = new List<string>();
 
-            var retrievedIssues = jiraRestClient.GetIssues(jql);
+            var retrievedIssues = await jiraRestClient.GetIssuesAsync(jql);
             foreach (var item in retrievedIssues)
             {
                 Log.Info("Updating issue '{0}'", item.Key);
@@ -81,7 +83,7 @@ namespace JiraCli.Services
 
                             // get parent and assign that instead.
                             Log.Info("Issue '{0}' is a subtask. Will assign version to the parent task: '{1}' instead.", item.Key, item.Fields.Parent.ProxyKey);
-                            jiraRestClient.UpdateIssue(item.Fields.Parent.ProxyKey, issueUpdate);
+                            await jiraRestClient.UpdateIssueAsync(item.Fields.Parent.ProxyKey, issueUpdate);
                             assignedVersions.Add(item.Fields.Parent.ProxyKey);
                             continue;
                         }
@@ -95,7 +97,7 @@ namespace JiraCli.Services
                     }
                 }
 
-                jiraRestClient.UpdateIssue(item.ProxyKey, issueUpdate);
+                await jiraRestClient.UpdateIssueAsync(item.ProxyKey, issueUpdate);
                 assignedVersions.Add(item.ProxyKey);
                 Log.Info("Issue updated.");
 
@@ -112,7 +114,7 @@ namespace JiraCli.Services
 
         }
 
-        public void CreateVersion(IJiraRestClient jiraRestClient, string projectKey, string version)
+        public async Task CreateVersionAsync(IJiraRestClient jiraRestClient, string projectKey, string version)
         {
             Argument.IsNotNull(() => jiraRestClient);
             Argument.IsNotNullOrWhitespace(() => projectKey);
@@ -122,14 +124,14 @@ namespace JiraCli.Services
 
             Log.Debug("Checking if version already exists");
 
-            var existingVersion = GetProjectVersion(jiraRestClient, projectKey, version);
+            var existingVersion = await GetProjectVersionAsync(jiraRestClient, projectKey, version);
             if (existingVersion != null)
             {
                 Log.Info("Version '{0}' already exists", version);
 
                 if (existingVersion.Released)
                 {
-                    Log.ErrorAndThrowException<InvalidOperationException>($"Version '{version}' is already released, are you re-releasing an existing version?");
+                    throw Log.ErrorAndCreateException<InvalidOperationException>($"Version '{version}' is already released, are you re-releasing an existing version?");
                 }
 
                 return;
@@ -137,25 +139,22 @@ namespace JiraCli.Services
 
             Log.Debug("Version does not yet exist, creating version");
 
-            var project = GetProject(jiraRestClient, projectKey);
+            var project = await GetProjectAsync(jiraRestClient, projectKey);
             if (project == null)
             {
-                Log.ErrorAndThrowException<InvalidOperationException>($"Project '{projectKey}' cannot be found or current user does not have access to the project");
+                throw Log.ErrorAndCreateException<InvalidOperationException>($"Project '{projectKey}' cannot be found or current user does not have access to the project");
             }
 
-
-            jiraRestClient.CreateProjectVersion(new JiraProjectVersion
+            await jiraRestClient.CreateProjectVersionAsync(new JiraProjectVersion
             {
                 Project = project.Key,
                 Name = version,
             });
 
             Log.Info("Created version '{0}'", version);
-
-
         }
 
-        public void ReleaseVersion(IJiraRestClient jiraRestClient, string projectKey, string version)
+        public async Task ReleaseVersionAsync(IJiraRestClient jiraRestClient, string projectKey, string version)
         {
             Argument.IsNotNull(() => jiraRestClient);
             Argument.IsNotNullOrWhitespace(() => projectKey);
@@ -163,10 +162,10 @@ namespace JiraCli.Services
 
             Log.Info("Releasing version '{0}'", version);
 
-            var projectVersion = GetProjectVersion(jiraRestClient, projectKey, version);
+            var projectVersion = await GetProjectVersionAsync(jiraRestClient, projectKey, version);
             if (projectVersion == null)
             {
-                Log.ErrorAndThrowException<InvalidOperationException>($"Version '{version}' does not exist / ensure you have created this version first");
+                throw Log.ErrorAndCreateException<InvalidOperationException>($"Version '{version}' does not exist / ensure you have created this version first");
             }
 
             if (projectVersion.Released)
@@ -189,12 +188,12 @@ namespace JiraCli.Services
 
             projectVersion.Released = true;
 
-            jiraRestClient.UpdateProjectVersion(projectVersion);
+            await jiraRestClient.UpdateProjectVersionAsync(projectVersion);
 
             Log.Info("Released version '{0}'", version);
         }
 
-        public void MergeVersions(IJiraRestClient jiraRestClient, string projectKey, string version)
+        public async Task MergeVersionsAsync(IJiraRestClient jiraRestClient, string projectKey, string version)
         {
             Argument.IsNotNull(() => jiraRestClient);
             Argument.IsNotNullOrWhitespace(() => projectKey);
@@ -208,7 +207,7 @@ namespace JiraCli.Services
                 return;
             }
 
-            var allVersions = jiraRestClient.GetProjectVersions(projectKey);
+            var allVersions = await jiraRestClient.GetProjectVersionsAsync(projectKey);
 
             var newVersion = allVersions.First(x => string.Equals(x.Name, version));
             var versionsToMerge = new List<JiraProjectVersion>();
@@ -218,8 +217,6 @@ namespace JiraCli.Services
                 if (_mergeVersionService.ShouldBeMerged(version, remoteVersion.Name))
                 {
                     versionsToMerge.Add(remoteVersion);
-
-
                 }
             }
 
@@ -232,24 +229,24 @@ namespace JiraCli.Services
 
                 Log.Debug("Deleting version '{0}' and moving issues to '{1}'", versionToMerge, newVersion);
 
-                jiraRestClient.DeleteProjectVersion(versionToMerge, newVersion, newVersion);
+                await jiraRestClient.DeleteProjectVersionAsync(versionToMerge, newVersion, newVersion);
             }
 
             Log.Info("Merged all prerelease versions into '{0}'", version);
         }
 
-        private JiraProject GetProject(IJiraRestClient jiraRestClient, string projectKey)
+        private async Task<JiraProject> GetProjectAsync(IJiraRestClient jiraRestClient, string projectKey)
         {
-            var existingProject = (from x in jiraRestClient.GetProjects()
+            var existingProject = (from x in await jiraRestClient.GetProjectsAsync()
                                    where string.Equals(x.Key, projectKey, StringComparison.OrdinalIgnoreCase)
                                    select x).FirstOrDefault();
 
             return existingProject;
         }
 
-        private JiraProjectVersion GetProjectVersion(IJiraRestClient jiraRestClient, string project, string version)
+        private async Task<JiraProjectVersion> GetProjectVersionAsync(IJiraRestClient jiraRestClient, string project, string version)
         {
-            var existingVersion = (from x in jiraRestClient.GetProjectVersions(project)
+            var existingVersion = (from x in await jiraRestClient.GetProjectVersionsAsync(project)
                                    where string.Equals(x.Name, version, StringComparison.OrdinalIgnoreCase)
                                    select x).FirstOrDefault();
 

@@ -8,7 +8,8 @@
 namespace JiraCli
 {
     using System.Collections.Generic;
-    using Atlassian.Jira;
+    using System.Threading.Tasks;
+    using Atlassian.Jira.Remote;
     using Catel;
     using Models;
     using Newtonsoft.Json;
@@ -16,7 +17,7 @@ namespace JiraCli
 
     public static partial class JiraExtensions
     {
-        public static void CreateProjectVersion(this IJiraRestClient jiraRestClient, JiraProjectVersion projectVersion)
+        public static async Task CreateProjectVersionAsync(this IJiraRestClient jiraRestClient, JiraProjectVersion projectVersion)
         {
             Argument.IsNotNull(() => jiraRestClient);
             Argument.IsNotNull(() => projectVersion);
@@ -24,11 +25,11 @@ namespace JiraCli
             var requestJson = JsonConvert.SerializeObject(projectVersion, GetJsonSettings());
 
             var resource = "rest/api/2/version";
-            var responseJson = jiraRestClient.ExecuteRequestRaw(Method.POST, resource, requestJson);
+            var responseJson = await jiraRestClient.ExecuteRequestRawAsync(Method.POST, resource, requestJson);
         }
 
 
-        public static void UpdateIssue(this IJiraRestClient jiraRestClient, string issueNumber, JiraIssueUpdate updateIssue)
+        public static async Task UpdateIssueAsync(this IJiraRestClient jiraRestClient, string issueNumber, JiraIssueUpdate updateIssue)
         {
             Argument.IsNotNull(() => jiraRestClient);
             Argument.IsNotNull(() => updateIssue);
@@ -36,10 +37,10 @@ namespace JiraCli
             var requestJson = JsonConvert.SerializeObject(updateIssue, GetJsonSettings());
 
             var resource = $"rest/api/2/issue/{issueNumber}";
-            var responseJson = jiraRestClient.ExecuteRequestRaw(Method.PUT, resource, requestJson);
+            var responseJson = await jiraRestClient.ExecuteRequestRawAsync(Method.PUT, resource, requestJson);
         }
 
-        public static void UpdateProjectVersion(this IJiraRestClient jiraRestClient, JiraProjectVersion projectVersion)
+        public static async Task UpdateProjectVersionAsync(this IJiraRestClient jiraRestClient, JiraProjectVersion projectVersion)
         {
             Argument.IsNotNull(() => jiraRestClient);
             Argument.IsNotNull(() => projectVersion);
@@ -47,10 +48,10 @@ namespace JiraCli
             var requestJson = JsonConvert.SerializeObject(projectVersion, GetJsonSettings());
 
             var resource = string.Format("rest/api/2/version/{0}", projectVersion.Id);
-            var responseJson = jiraRestClient.ExecuteRequestRaw(Method.PUT, resource, requestJson);
+            var responseJson = await jiraRestClient.ExecuteRequestRawAsync(Method.PUT, resource, requestJson);
         }
 
-        public static void DeleteProjectVersion(this IJiraRestClient jiraRestClient, JiraProjectVersion projectVersion, JiraProjectVersion projectToMoveFixIssuesTo = null,
+        public static async Task DeleteProjectVersionAsync(this IJiraRestClient jiraRestClient, JiraProjectVersion projectVersion, JiraProjectVersion projectToMoveFixIssuesTo = null,
             JiraProjectVersion projectToMoveAffectedIssuesTo = null)
         {
             Argument.IsNotNull(() => jiraRestClient);
@@ -70,10 +71,10 @@ namespace JiraCli
                 resource += string.Format("moveAffectedIssuesTo={0}", projectToMoveAffectedIssuesTo.Id);
             }
 
-            var responseJson = jiraRestClient.ExecuteRequest(Method.DELETE, resource);
+            var responseJson = await jiraRestClient.ExecuteRequestAsync(Method.DELETE, resource);
         }
 
-        public static List<JiraProjectVersion> GetProjectVersions(this IJiraRestClient jiraRestClient, string projectKey)
+        public static async Task<List<JiraProjectVersion>> GetProjectVersionsAsync(this IJiraRestClient jiraRestClient, string projectKey)
         {
             Argument.IsNotNull(() => jiraRestClient);
             Argument.IsNotNullOrWhitespace(() => projectKey);
@@ -81,7 +82,7 @@ namespace JiraCli
             var projectVersions = new List<JiraProjectVersion>();
 
             var resource = string.Format("rest/api/2/project/{0}/versions", projectKey);
-            var responseJson = jiraRestClient.ExecuteRequest(Method.GET, resource);          
+            var responseJson = await jiraRestClient.ExecuteRequestAsync(Method.GET, resource);          
 
             foreach (var jsonElement in responseJson.Children())
             {

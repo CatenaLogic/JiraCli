@@ -28,7 +28,7 @@ namespace JiraCli
             _actionManager = actionManager;
         }
 
-        public async Task<int> Run(string[] arguments, Action waitForInput)
+        public async Task<int> RunAsync(string[] arguments, Action waitForInput)
         {
             _helpWriter.WriteAppHeader(s => Log.Write(LogEvent.Info, s));
 
@@ -49,7 +49,7 @@ namespace JiraCli
             var action = _actionManager.GetAction(context.Action);
             if (action == null)
             {
-                Log.ErrorAndThrowException<JiraCliException>("Action '{0}' does not exist, make sure to specify the right action name", context.Action);
+                throw Log.ErrorAndCreateException<JiraCliException>("Action '{0}' does not exist, make sure to specify the right action name", context.Action);
             }
 
             Log.Debug("Validating action");
@@ -58,7 +58,7 @@ namespace JiraCli
 
             Log.Info("Running action '{0}'", action.Name);
 
-            var result = await action.Execute(context);
+            var result = await action.ExecuteAsync(context);
             return result ? 0 : -1;
         }
     }

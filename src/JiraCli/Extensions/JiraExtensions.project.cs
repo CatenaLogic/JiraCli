@@ -8,7 +8,8 @@
 namespace JiraCli
 {
     using System.Collections.Generic;
-    using Atlassian.Jira;
+    using System.Threading.Tasks;
+    using Atlassian.Jira.Remote;
     using Catel;
     using Models;
     using Newtonsoft.Json;
@@ -17,13 +18,13 @@ namespace JiraCli
 
     public static partial class JiraExtensions
     {
-        public static List<JiraProject> GetProjects(this IJiraRestClient jiraRestClient)
+        public static async Task<List<JiraProject>> GetProjectsAsync(this IJiraRestClient jiraRestClient)
         {
             Argument.IsNotNull(() => jiraRestClient);
 
             var projects = new List<JiraProject>();
 
-            var responseJson = jiraRestClient.ExecuteRequest(Method.GET, "rest/api/2/project");
+            var responseJson = await jiraRestClient.ExecuteRequestAsync(Method.GET, "rest/api/2/project");
 
             foreach (var jsonElement in responseJson.Children())
             {

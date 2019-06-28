@@ -16,6 +16,7 @@ namespace JiraCli
     using Newtonsoft.Json.Serialization;
     using RestSharp;
     using System.Diagnostics;
+    using System.Threading.Tasks;
 
     public static partial class JiraExtensions
     {
@@ -29,7 +30,7 @@ namespace JiraCli
             };
         }
 
-        public static JToken ExecuteRequestRaw(this IJiraRestClient jiraRestClient, Method method, string resource, string jsonRequestBody)
+        public static async Task<JToken> ExecuteRequestRawAsync(this Atlassian.Jira.Remote.IJiraRestClient jiraRestClient, Method method, string resource, string jsonRequestBody)
         {
             Argument.IsNotNull(() => jiraRestClient);
             Argument.IsNotNullOrWhitespace(() => jsonRequestBody);
@@ -50,7 +51,7 @@ namespace JiraCli
 
             try
             {
-                var response = jiraRestClient.ExecuteRequest(restRequest);
+                var response = await jiraRestClient.ExecuteRequestAsync(restRequest);
                 return response.StatusCode != HttpStatusCode.NoContent ? JToken.Parse(response.Content) : new JObject();
             }
             catch (System.Exception ex)

@@ -7,11 +7,12 @@
 
 namespace JiraCli
 {
+    using System.Threading.Tasks;
     using Catel;
     using Catel.Logging;
     using Services;
 
-    [Action("ReleaseVersion", 
+    [Action("ReleaseVersion",
         Description = "Releases a version for the specified project",
         ArgumentsUsage = "-project [projectkey] -version [version]")]
     public class ReleaseVersionAction : ActionBase
@@ -30,25 +31,25 @@ namespace JiraCli
         {
             if (string.IsNullOrEmpty(context.Project))
             {
-                Log.ErrorAndThrowException<JiraCliException>("Project is missing");
+                throw Log.ErrorAndCreateException<JiraCliException>("Project is missing");
             }
 
             if (string.IsNullOrEmpty(context.Version))
             {
-                Log.ErrorAndThrowException<JiraCliException>("Version is missing");
+                throw Log.ErrorAndCreateException<JiraCliException>("Version is missing");
             }
         }
 
-        protected override void ExecuteWithContext(Context context)
+        protected override async Task ExecuteWithContextAsync(Context context)
         {
             var jira = CreateJira(context);
 
-            _versionService.ReleaseVersion(jira, context.Project, context.Version);
+            await _versionService.ReleaseVersionAsync(jira, context.Project, context.Version);
 
             if (context.MergeVersions)
             {
                 var mergeVersionsJira = CreateJira(context);
-                _versionService.MergeVersions(mergeVersionsJira, context.Project, context.Version);
+                await _versionService.MergeVersionsAsync(mergeVersionsJira, context.Project, context.Version);
             }
         }
     }

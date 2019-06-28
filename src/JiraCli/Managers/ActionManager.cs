@@ -24,7 +24,7 @@ namespace JiraCli
             Argument.IsNotNull(() => typeFactory);
 
             var types = (from type in TypeCache.GetTypes()
-                         where AttributeHelper.IsDecoratedWithAttribute<ActionAttribute>(type)
+                         where type.IsDecoratedWithAttribute<ActionAttribute>()
                          select type);
             foreach (var type in types)
             {
