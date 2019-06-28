@@ -42,7 +42,7 @@ namespace JiraCli
 
             try
             {
-                await Task.Factory.StartNew(() => ExecuteWithContextAsync(context));
+                await ExecuteWithContextAsync(context);
                 return true;
             }
             catch (Exception ex)

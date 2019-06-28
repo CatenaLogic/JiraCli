@@ -136,3 +136,4 @@ BundleArtifacts/
 
 .vscode
 FodyWeavers.xsd
+src/JiraCli/Properties/launchSettings.json

@@ -252,7 +252,5 @@ namespace JiraCli.Services
 
             return existingVersion;
         }
-
-
     }
 }
