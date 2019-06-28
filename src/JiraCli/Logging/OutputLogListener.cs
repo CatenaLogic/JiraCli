@@ -18,7 +18,7 @@ namespace JiraCli.Logging
             IsDebugEnabled = true;
         }
 
-        protected override string FormatLogEvent(ILog log, string message, LogEvent logEvent, object extraData, DateTime time)
+        protected override string FormatLogEvent(ILog log, string message, LogEvent logEvent, object extraData, LogData logData, DateTime time)
         {
             return message;
         }
