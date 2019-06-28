@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ArgumentParserFacts.cs" company="CatenaLogic">
 //   Copyright (c) 2014 - 2014 CatenaLogic. All rights reserved.
 // </copyright>
@@ -7,7 +7,7 @@
 
 namespace JiraCli.Test
 {
-    using Catel.Test;
+    using Catel.Tests;
     using JiraCli;
     using NUnit.Framework;
 
@@ -46,8 +46,8 @@ namespace JiraCli.Test
 
             Assert.IsNotNull(context.Issues);
             Assert.IsNotEmpty(context.Issues);
-            Assert.IsNotNullOrEmpty(context.Project);
-            Assert.IsNotNullOrEmpty(context.Version);
+            Assert.IsNotNull(context.Project);
+            Assert.IsNotNull(context.Version);
         }
 
         //[TestCase]

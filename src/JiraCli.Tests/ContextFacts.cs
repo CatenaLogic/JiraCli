@@ -7,7 +7,7 @@
 
 namespace JiraCli.Test
 {
-    using Catel.Test;
+    using Catel.Tests;
     using NUnit.Framework;
     using Tests;
 
