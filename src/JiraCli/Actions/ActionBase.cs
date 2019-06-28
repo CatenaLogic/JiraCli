@@ -58,19 +58,25 @@ namespace JiraCli
         {
             Argument.IsNotNull(() => context);
 
-            var type = TypeCache.GetType("Atlassian.Jira.Remote.JiraRestServiceClient");
-            var constructor = type.GetConstructorsEx().First();
-
-            var jiraRestClient = (IJiraRestClient) constructor.Invoke(new object[]
-            {
-                context.JiraUrl,
-                context.UserName,
-                context.Password,
-                new JiraRestClientSettings
+            var jiraRestClient = new Atlassian.Jira.Remote.JiraRestClient(context.JiraUrl,
+                context.UserName, context.Password, new JiraRestClientSettings
                 {
                     EnableRequestTrace = Debugger.IsAttached
-                } 
-            });
+                });
+
+            //var type = TypeCache.GetType("Atlassian.Jira.Remote.JiraRestServiceClient");
+            //var constructor = type.GetConstructorsEx().First();
+
+            //var jiraRestClient = (IJiraRestClient) constructor.Invoke(new object[]
+            //{
+            //    context.JiraUrl,
+            //    context.UserName,
+            //    context.Password,
+            //    new JiraRestClientSettings
+            //    {
+            //        EnableRequestTrace = Debugger.IsAttached
+            //    } 
+            //});
 
             return jiraRestClient;
         }
