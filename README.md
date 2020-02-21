@@ -25,7 +25,7 @@ The actions are implemented and determined dynamically. Use the **-help** parame
 
 ## Getting help
 
-When you need help about GitLink, use the following command line:
+When you need help about JiraCli, use the following command line:
 
     JiraCli.exe -help
 
@@ -33,17 +33,16 @@ When you need help about GitLink, use the following command line:
 
 When you need to log the information to a file, use the following command line:
 
-    JiraCli.exe -l GitLinkLog.log [other parameters]
+    JiraCli.exe -l JiraCliLog.log [other parameters]
 
+## Create new version in JIRA	
 
-## Create new version in JIRA
+	[basecall] createversion -project MyProject -version 1.2.0 	
 
-	[basecall] createversion -project MyProject -version 1.2.0 
-
-## Release new version in JIRA
+## Release new version in JIRA	
 
 	[basecall] releaseversion -project MyProject -version 1.2.0 
-
+    
 # How to get JiraCli #
 
 There are three general ways to get JiraCli:
@@ -64,6 +63,6 @@ If you want to reference the assembly to use it in code, the recommended way to 
 
 **Note that getting JiraCli via NuGet will add it as a reference to the project**
 
-#Icon
+# Icon
 
 Flag by Castor & Pollux from The Noun Project
