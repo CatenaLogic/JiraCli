@@ -35,6 +35,14 @@ When you need to log the information to a file, use the following command line:
 
     JiraCli.exe -l JiraCliLog.log [other parameters]
 
+## Create new version in JIRA	
+
+	[basecall] createversion -project MyProject -version 1.2.0 	
+
+## Release new version in JIRA	
+
+	[basecall] releaseversion -project MyProject -version 1.2.0 
+    
 # How to get JiraCli #
 
 There are three general ways to get JiraCli:
