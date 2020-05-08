@@ -40,7 +40,7 @@
     <PackageReference Include="LoadAssembliesOnStartup.Fody" Version="4.4.0" PrivateAssets="all" />
     <PackageReference Include="ModuleInit.Fody" Version="2.0.0" PrivateAssets="all" />
     <PackageReference Include="Obsolete.Fody" Version="5.0.0" PrivateAssets="all" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" PrivateAssets="all" />
     <PackageReference Include="RestSharp" Version="106.6.9" PrivateAssets="all" />
     <PackageReference Include="semver" Version="2.0.4" PrivateAssets="all" />
   </ItemGroup>
