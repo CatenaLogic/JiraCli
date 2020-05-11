@@ -42,12 +42,7 @@ namespace JiraCli
                 RequestFormat = DataFormat.Json,
             };
 
-            restRequest.AddParameter(new Parameter
-            {
-                Name = "application/json",
-                Type = ParameterType.RequestBody,
-                Value = jsonRequestBody
-            });
+            restRequest.AddParameter(new Parameter("application/json", jsonRequestBody, ParameterType.RequestBody));
 
             try
             {
