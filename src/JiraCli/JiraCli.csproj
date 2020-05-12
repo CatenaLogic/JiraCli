@@ -42,7 +42,7 @@
     <PackageReference Include="Obsolete.Fody" Version="5.2.1" PrivateAssets="all" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" PrivateAssets="all" />
     <PackageReference Include="RestSharp" Version="106.11.2" PrivateAssets="all" />
-    <PackageReference Include="semver" Version="2.0.4" PrivateAssets="all" />
+    <PackageReference Include="semver" Version="2.0.6" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
