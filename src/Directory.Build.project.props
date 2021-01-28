@@ -5,7 +5,6 @@
 
   <PropertyGroup>
     <Authors>catenalogic</Authors>
-    <PackageIconUrl>https://github.com/CatenaLogic/Assets/raw/master/packages/logo.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/CatenaLogic/JiraCli</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/CatenaLogic/JiraCli</RepositoryUrl>
