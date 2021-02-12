@@ -31,7 +31,7 @@
 
   <ItemGroup>
     <PackageReference Include="Atlassian.SDK" Version="12.4.0" PrivateAssets="all" />
-    <PackageReference Include="Catel.Core" Version="5.12.11" PrivateAssets="all" />
+    <PackageReference Include="Catel.Core" Version="5.12.12" PrivateAssets="all" />
     <PackageReference Include="Catel.Fody" Version="4.6.0" PrivateAssets="all" />
     <PackageReference Include="Costura.Fody" Version="4.1.0" PrivateAssets="all" />
     <PackageReference Include="Fody" Version="6.3.0" PrivateAssets="all">
