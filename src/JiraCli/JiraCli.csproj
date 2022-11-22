@@ -41,7 +41,7 @@
     <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all" />
     <PackageReference Include="Obsolete.Fody" Version="5.3.0" PrivateAssets="all" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="all" />
-    <PackageReference Include="RestSharp" Version="108.0.2" PrivateAssets="all" />
+    <PackageReference Include="RestSharp" Version="108.0.3" PrivateAssets="all" />
     <PackageReference Include="semver" Version="2.2.0" PrivateAssets="all" />
   </ItemGroup>
 
