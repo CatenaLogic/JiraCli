@@ -1,5 +1,6 @@
 ﻿namespace JiraCli
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Atlassian.Jira.Remote;

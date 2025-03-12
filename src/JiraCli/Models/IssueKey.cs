@@ -23,7 +23,7 @@ namespace JiraCli.Models
 
         public static IssueKey Parse(string issueKeyString)
         {
-            if (issueKeyString == null)
+            if (issueKeyString is null)
             {
                 throw new ArgumentNullException("IssueKeyString is null!");
             }

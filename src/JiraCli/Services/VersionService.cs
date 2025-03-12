@@ -41,7 +41,7 @@
             Log.Debug("Checking if version already exists");
 
             var existingVersion = GetProjectVersionAsync(jiraRestClient, projectKey, version);
-            if (existingVersion == null)
+            if (existingVersion is null)
             {
                 throw Log.ErrorAndCreateException<InvalidOperationException>($"Version '{version}' does not exist / ensure you have created this version first");
             }
@@ -62,13 +62,13 @@
             {
                 Log.Info("Updating issue '{0}'", item.Key);
                 // if the item has a parent (i.e like a subtask)
-                if (item.Fields != null)
+                if (item.Fields is not null)
                 {
-                    if (item.Fields.IssueType != null)
+                    if (item.Fields.IssueType is not null)
                     {
                         if (item.Fields.IssueType.SubTask)
                         {
-                            if (item.Fields.Parent == null)
+                            if (item.Fields.Parent is null)
                             {
                                 Log.Error("Could not retrieve parent task for subtask: {0}", item.Key);
                                 continue;          // do not attempt to apply to subtask.             
@@ -118,7 +118,7 @@
             Log.Debug("Checking if version already exists");
 
             var existingVersion = await GetProjectVersionAsync(jiraRestClient, projectKey, version);
-            if (existingVersion != null)
+            if (existingVersion is not null)
             {
                 Log.Info("Version '{0}' already exists", version);
 
@@ -133,7 +133,7 @@
             Log.Debug("Version does not yet exist, creating version");
 
             var project = await GetProjectAsync(jiraRestClient, projectKey);
-            if (project == null)
+            if (project is null)
             {
                 throw Log.ErrorAndCreateException<InvalidOperationException>($"Project '{projectKey}' cannot be found or current user does not have access to the project");
             }
@@ -156,7 +156,7 @@
             Log.Info("Releasing version '{0}'", version);
 
             var projectVersion = await GetProjectVersionAsync(jiraRestClient, projectKey, version);
-            if (projectVersion == null)
+            if (projectVersion is null)
             {
                 throw Log.ErrorAndCreateException<InvalidOperationException>($"Version '{version}' does not exist / ensure you have created this version first");
             }

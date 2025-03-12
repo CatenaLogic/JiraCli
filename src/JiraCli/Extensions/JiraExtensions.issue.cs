@@ -1,5 +1,6 @@
 ﻿namespace JiraCli
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Atlassian.Jira.Remote;
@@ -23,7 +24,7 @@
                 MaxResults = maxResults,
             };
 
-            if (fields != null)
+            if (fields is not null)
             {
                 searchRequest.Fields.AddRange(fields);
             }
@@ -34,8 +35,6 @@
                 searchRequest.Fields.Add("parent");
                 searchRequest.Fields.Add("status");
                 searchRequest.Fields.Add("issuetype");
-                
-
             }
 
             var requestJson = JsonConvert.SerializeObject(searchRequest, GetJsonSettings());

@@ -1,5 +1,6 @@
 ﻿namespace JiraCli
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Atlassian.Jira.Remote;
@@ -52,13 +53,13 @@
 
             var resource = string.Format("rest/api/2/version/{0}", projectVersion.Id);
 
-            if (projectToMoveFixIssuesTo != null)
+            if (projectToMoveFixIssuesTo is not null)
             {
                 resource += resource.Contains("?") ? "&" : "?";
                 resource += string.Format("moveFixIssuesTo={0}", projectToMoveFixIssuesTo.Id);
             }
 
-            if (projectToMoveAffectedIssuesTo != null)
+            if (projectToMoveAffectedIssuesTo is not null)
             {
                 resource += resource.Contains("?") ? "&" : "?";
                 resource += string.Format("moveAffectedIssuesTo={0}", projectToMoveAffectedIssuesTo.Id);

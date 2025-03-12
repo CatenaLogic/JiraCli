@@ -10,6 +10,7 @@
     using RestSharp;
     using System.Diagnostics;
     using System.Threading.Tasks;
+    using System;
 
     public static partial class JiraExtensions
     {

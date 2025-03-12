@@ -40,7 +40,7 @@
             }
 
             var action = _actionManager.GetAction(context.Action);
-            if (action == null)
+            if (action is null)
             {
                 throw Log.ErrorAndCreateException<JiraCliException>("Action '{0}' does not exist, make sure to specify the right action name", context.Action);
             }
