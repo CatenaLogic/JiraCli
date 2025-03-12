@@ -39,16 +39,13 @@
             ArgumentNullException.ThrowIfNull(versionToCheck);
             ArgumentNullException.ThrowIfNull(versionToCompareAgainst);
 
-            SemVersion semanticVersionToCheck;
-            bool hasParsedVersionToCheck = SemVersion.TryParse(versionToCheck, out semanticVersionToCheck);
-
-            SemVersion semanticVersionToCompareAgainst;
-            bool hasParsedVersionToCompareAgainst = SemVersion.TryParse(versionToCompareAgainst, out semanticVersionToCompareAgainst);
+            var hasParsedVersionToCheck = SemVersion.TryParse(versionToCheck, out var semanticVersionToCheck);
+            var hasParsedVersionToCompareAgainst = SemVersion.TryParse(versionToCompareAgainst, out var semanticVersionToCompareAgainst);
 
             // either both have to be semver or both have to be ordinary to compare.
             if (hasParsedVersionToCheck && hasParsedVersionToCompareAgainst)
             {
-                int result = semanticVersionToCheck.CompareByPrecedence(versionToCompareAgainst);
+                int result = semanticVersionToCheck.ComparePrecedenceTo(semanticVersionToCompareAgainst);
                 return ConvertToComparisonResult(result);
             }
 
