@@ -36,7 +36,7 @@
                 RequestFormat = DataFormat.Json,
             };
 
-            restRequest.AddParameter(new Parameter("application/json", jsonRequestBody, ParameterType.RequestBody));
+            restRequest.AddParameter(new JsonParameter(jsonRequestBody, ParameterType.RequestBody));
 
             try
             {
