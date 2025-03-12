@@ -24,8 +24,8 @@
         /// <param name="versionInfoService">The version information service.</param>
         public VersionService(IMergeVersionService mergeVersionService, IVersionInfoService versionInfoService)
         {
-            Argument.IsNotNull(() => mergeVersionService);
-            Argument.IsNotNull(() => versionInfoService);
+            ArgumentNullException.ThrowIfNull(mergeVersionService);
+            ArgumentNullException.ThrowIfNull(versionInfoService);
 
             _mergeVersionService = mergeVersionService;
             _versionInfoService = versionInfoService;
@@ -33,7 +33,7 @@
 
         public async Task<string[]> AssignVersionToIssuesAsync(IJiraRestClient jiraRestClient, string projectKey, string version, string[] issues)
         {
-            Argument.IsNotNull(() => jiraRestClient);
+            ArgumentNullException.ThrowIfNull(jiraRestClient);
             Argument.IsNotNullOrWhitespace(() => projectKey);
             Argument.IsNotNullOrWhitespace(() => version);
             Argument.IsNotNullOrEmptyArray(() => issues);
@@ -109,7 +109,7 @@
 
         public async Task CreateVersionAsync(IJiraRestClient jiraRestClient, string projectKey, string version)
         {
-            Argument.IsNotNull(() => jiraRestClient);
+            ArgumentNullException.ThrowIfNull(jiraRestClient);
             Argument.IsNotNullOrWhitespace(() => projectKey);
             Argument.IsNotNullOrWhitespace(() => version);
 
@@ -149,7 +149,7 @@
 
         public async Task ReleaseVersionAsync(IJiraRestClient jiraRestClient, string projectKey, string version)
         {
-            Argument.IsNotNull(() => jiraRestClient);
+            ArgumentNullException.ThrowIfNull(jiraRestClient);
             Argument.IsNotNullOrWhitespace(() => projectKey);
             Argument.IsNotNullOrWhitespace(() => version);
 
@@ -188,7 +188,7 @@
 
         public async Task MergeVersionsAsync(IJiraRestClient jiraRestClient, string projectKey, string version)
         {
-            Argument.IsNotNull(() => jiraRestClient);
+            ArgumentNullException.ThrowIfNull(jiraRestClient);
             Argument.IsNotNullOrWhitespace(() => projectKey);
             Argument.IsNotNullOrWhitespace(() => version);
 

@@ -14,7 +14,7 @@
 
         public ActionManager(ITypeFactory typeFactory)
         {
-            Argument.IsNotNull(() => typeFactory);
+            ArgumentNullException.ThrowIfNull(typeFactory);
 
             var types = (from type in TypeCache.GetTypes()
                          where type.IsDecoratedWithAttribute<ActionAttribute>()

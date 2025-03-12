@@ -12,15 +12,15 @@
 
         public MergeVersionService(IVersionInfoService versionInfoService)
         {
-            Argument.IsNotNull(() => versionInfoService);
+            ArgumentNullException.ThrowIfNull(versionInfoService);
 
             _versionInfoService = versionInfoService;
         }
 
         public bool ShouldBeMerged(string versionBeingReleased, string versionToCheck)
         {
-            Argument.IsNotNull(() => versionBeingReleased);
-            Argument.IsNotNull(() => versionToCheck);
+            ArgumentNullException.ThrowIfNull(versionBeingReleased);
+            ArgumentNullException.ThrowIfNull(versionToCheck);
 
             // Only non pre-release versions can be merged in to.
             if (!_versionInfoService.IsReleaseVersion(versionBeingReleased))

@@ -8,7 +8,7 @@
     {
         public bool IsReleaseVersion(string version)
         {
-            Argument.IsNotNull(() => version);
+            ArgumentNullException.ThrowIfNull(version);
 
             // Attempt semver format.
             SemVersion semVer;
@@ -36,9 +36,8 @@
 
         public VersionComparisonResult CompareVersions(string versionToCheck, string versionToCompareAgainst)
         {
-
-            Argument.IsNotNull(() => versionToCheck);
-            Argument.IsNotNull(() => versionToCompareAgainst);
+            ArgumentNullException.ThrowIfNull(versionToCheck);
+            ArgumentNullException.ThrowIfNull(versionToCompareAgainst);
 
             SemVersion semanticVersionToCheck;
             bool hasParsedVersionToCheck = SemVersion.TryParse(versionToCheck, out semanticVersionToCheck);
@@ -90,7 +89,7 @@
 
         public bool IsPreRelease(string version, Predicate<string> prereleaseLabelChecker)
         {
-            Argument.IsNotNull(() => version);
+            ArgumentNullException.ThrowIfNull(version);
 
             // Can assume semver format.
             SemVersion semVer;
@@ -107,7 +106,7 @@
 
         public bool IsPreRelease(string version)
         {
-            Argument.IsNotNull(() => version);            
+            ArgumentNullException.ThrowIfNull(version);            
 
             // Can assume semver format.
             SemVersion semVer;
@@ -124,8 +123,8 @@
 
         public bool IsPreReleaseWithLabelPrefix(string version, string labelPrefix)
         {
-            Argument.IsNotNull(() => version);
-            Argument.IsNotNull(() => labelPrefix);
+            ArgumentNullException.ThrowIfNull(version);
+            ArgumentNullException.ThrowIfNull(labelPrefix);
 
             // Can assume semver format.
             SemVersion semVer;

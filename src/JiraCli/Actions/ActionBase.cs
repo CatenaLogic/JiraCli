@@ -31,7 +31,7 @@
 
         public async Task<bool> ExecuteAsync(Context context)
         {
-            Argument.IsNotNull(() => context);
+            ArgumentNullException.ThrowIfNull(context);
 
             try
             {
@@ -49,7 +49,7 @@
 
         protected IJiraRestClient CreateJira(Context context)
         {
-            Argument.IsNotNull(() => context);
+            ArgumentNullException.ThrowIfNull(context);
 
             var jiraRestClient = new Atlassian.Jira.Remote.JiraRestClient(context.JiraUrl,
                 context.UserName, context.Password, new JiraRestClientSettings

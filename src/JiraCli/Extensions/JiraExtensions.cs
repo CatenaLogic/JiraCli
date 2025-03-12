@@ -25,7 +25,7 @@
 
         public static async Task<JToken> ExecuteRequestRawAsync(this Atlassian.Jira.Remote.IJiraRestClient jiraRestClient, Method method, string resource, string jsonRequestBody)
         {
-            Argument.IsNotNull(() => jiraRestClient);
+            ArgumentNullException.ThrowIfNull(jiraRestClient);
             Argument.IsNotNullOrWhitespace(() => jsonRequestBody);
 
             var restRequest = new RestRequest

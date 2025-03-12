@@ -13,7 +13,7 @@
     {
         public static async Task<List<JiraProject>> GetProjectsAsync(this IJiraRestClient jiraRestClient)
         {
-            Argument.IsNotNull(() => jiraRestClient);
+            ArgumentNullException.ThrowIfNull(jiraRestClient);
 
             var projects = new List<JiraProject>();
 

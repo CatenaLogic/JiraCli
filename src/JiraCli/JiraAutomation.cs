@@ -14,8 +14,8 @@
 
         public JiraAutomation(IHelpWriter helpWriter, IActionManager actionManager)
         {
-            Argument.IsNotNull(() => helpWriter);
-            Argument.IsNotNull(() => actionManager);
+            ArgumentNullException.ThrowIfNull(helpWriter);
+            ArgumentNullException.ThrowIfNull(actionManager);
 
             _helpWriter = helpWriter;
             _actionManager = actionManager;

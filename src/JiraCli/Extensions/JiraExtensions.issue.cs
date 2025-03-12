@@ -12,7 +12,7 @@
     {
         public static async Task<List<JiraIssue>> GetIssuesAsync(this IJiraRestClient jiraRestClient, string jql, int startAt = 0, int maxResults = 200, string[] fields = null)
         {
-            Argument.IsNotNull(() => jiraRestClient);
+            ArgumentNullException.ThrowIfNull(jiraRestClient);
 
             var issues = new List<JiraIssue>();
 

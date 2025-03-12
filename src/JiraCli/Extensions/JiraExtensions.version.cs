@@ -12,8 +12,8 @@
     {
         public static async Task CreateProjectVersionAsync(this IJiraRestClient jiraRestClient, JiraProjectVersion projectVersion)
         {
-            Argument.IsNotNull(() => jiraRestClient);
-            Argument.IsNotNull(() => projectVersion);
+            ArgumentNullException.ThrowIfNull(jiraRestClient);
+            ArgumentNullException.ThrowIfNull(projectVersion);
 
             var requestJson = JsonConvert.SerializeObject(projectVersion, GetJsonSettings());
 
@@ -24,8 +24,8 @@
 
         public static async Task UpdateIssueAsync(this IJiraRestClient jiraRestClient, string issueNumber, JiraIssueUpdate updateIssue)
         {
-            Argument.IsNotNull(() => jiraRestClient);
-            Argument.IsNotNull(() => updateIssue);
+            ArgumentNullException.ThrowIfNull(jiraRestClient);
+            ArgumentNullException.ThrowIfNull(updateIssue);
 
             var requestJson = JsonConvert.SerializeObject(updateIssue, GetJsonSettings());
 
@@ -35,8 +35,8 @@
 
         public static async Task UpdateProjectVersionAsync(this IJiraRestClient jiraRestClient, JiraProjectVersion projectVersion)
         {
-            Argument.IsNotNull(() => jiraRestClient);
-            Argument.IsNotNull(() => projectVersion);
+            ArgumentNullException.ThrowIfNull(jiraRestClient);
+            ArgumentNullException.ThrowIfNull(projectVersion);
 
             var requestJson = JsonConvert.SerializeObject(projectVersion, GetJsonSettings());
 
@@ -47,8 +47,8 @@
         public static async Task DeleteProjectVersionAsync(this IJiraRestClient jiraRestClient, JiraProjectVersion projectVersion, JiraProjectVersion projectToMoveFixIssuesTo = null,
             JiraProjectVersion projectToMoveAffectedIssuesTo = null)
         {
-            Argument.IsNotNull(() => jiraRestClient);
-            Argument.IsNotNull(() => projectVersion);
+            ArgumentNullException.ThrowIfNull(jiraRestClient);
+            ArgumentNullException.ThrowIfNull(projectVersion);
 
             var resource = string.Format("rest/api/2/version/{0}", projectVersion.Id);
 
@@ -69,7 +69,7 @@
 
         public static async Task<List<JiraProjectVersion>> GetProjectVersionsAsync(this IJiraRestClient jiraRestClient, string projectKey)
         {
-            Argument.IsNotNull(() => jiraRestClient);
+            ArgumentNullException.ThrowIfNull(jiraRestClient);
             Argument.IsNotNullOrWhitespace(() => projectKey);
 
             var projectVersions = new List<JiraProjectVersion>();

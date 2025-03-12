@@ -12,7 +12,7 @@
 
         public HelpWriter(IActionManager actionManager)
         {
-            Argument.IsNotNull(() => actionManager);
+            ArgumentNullException.ThrowIfNull(actionManager);
 
             _actionManager = actionManager;
         }

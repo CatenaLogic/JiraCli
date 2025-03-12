@@ -15,7 +15,7 @@
 
         public CreateAndReleaseVersionAction(IVersionService versionService)
         {
-            Argument.IsNotNull(() => versionService);
+            ArgumentNullException.ThrowIfNull(versionService);
 
             _versionService = versionService;
         }
