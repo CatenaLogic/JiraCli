@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IntegrationTests.secureinfo.cs" company="CatenaLogic">
-//   Copyright (c) 2014 - 2015 CatenaLogic. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace JiraCli.Tests.IntegrationTests
+﻿namespace JiraCli.Tests.IntegrationTests
 {
     public partial class IntegrationTests
     {

@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IntegrationTests.cs" company="CatenaLogic">
-//   Copyright (c) 2014 - 2015 CatenaLogic. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace JiraCli.Tests.IntegrationTests
+﻿namespace JiraCli.Tests.IntegrationTests
 {
     using System;
     using System.Threading.Tasks;

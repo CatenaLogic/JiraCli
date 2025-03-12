@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="VersionInfoServiceFacts.cs" company="CatenaLogic">
-//   Copyright (c) 2014 - 2015 CatenaLogic. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace JiraCli.Tests.Services
+﻿namespace JiraCli.Tests.Services
 {
     using JiraCli.Services;
     using NUnit.Framework;
